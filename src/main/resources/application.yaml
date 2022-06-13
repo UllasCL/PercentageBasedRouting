@@ -1,0 +1,8 @@
+spring:
+  application:
+    name: RechargePoc
+
+server:
+  port: 8080
+  servlet:
+    contextPath: /recharge/poc
