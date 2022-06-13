@@ -1,6 +1,7 @@
 package com.poc.RechargePoc.service;
 
 import com.poc.RechargePoc.component.VendorSelectionComponent;
+import com.poc.RechargePoc.constants.Constants;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import lombok.extern.slf4j.Slf4j;
@@ -15,6 +16,9 @@ import org.springframework.stereotype.Service;
 @Service
 public class FulfilmentService {
 
+  /**
+   * The Vendor selection component.
+   */
   @Autowired
   private VendorSelectionComponent vendorSelectionComponent;
   /**
@@ -23,9 +27,9 @@ public class FulfilmentService {
   public static Map<String, Integer> vendorsMap = new ConcurrentHashMap<>();
 
   static {
-    vendorsMap.put("SS", 40);
-    vendorsMap.put("PAY1", 35);
-    vendorsMap.put("JRI", 25);
+    vendorsMap.put(Constants.SS, 40);
+    vendorsMap.put(Constants.PAY1, 35);
+    vendorsMap.put(Constants.JRI, 25);
   }
 
   /**
@@ -33,10 +37,43 @@ public class FulfilmentService {
    */
   public static Map<String, String> orderVendor = new ConcurrentHashMap<>();
 
+  /**
+   * The constant totalRequest.
+   */
   private static int totalRequest = 0;
+  /**
+   * The constant SS.
+   */
   private static int SS = 0;
+  /**
+   * The constant PAY1.
+   */
   private static int PAY1 = 0;
+  /**
+   * The constant JRI.
+   */
   private static int JRI = 0;
+
+  /**
+   * The constant SS.
+   */
+  private static int FALLBACK_SS = 0;
+  /**
+   * The constant PAY1.
+   */
+  private static int FALLBACK_PAY1 = 0;
+  /**
+   * The constant JRI.
+   */
+  private static int FALLBACK_JRI = 0;
+  /**
+   * The constant totalFallbackRequest.
+   */
+  private static int totalFallbackRequest = 0;
+  /**
+   * The constant totalFallbackOnSaveVendor.
+   */
+  private static int totalFallbackOnSameVendor = 0;
 
   /**
    * Fulfil order string.
@@ -47,7 +84,7 @@ public class FulfilmentService {
   public String fulfilOrder(String orderId) {
     totalRequest++;
     var selectedVendor = vendorSelectionComponent.getVendor(vendorsMap);
-    if (selectedVendor == null){
+    if (selectedVendor == null) {
       log.error("Invalid vendor selected");
       return Strings.EMPTY;
     }
@@ -55,19 +92,44 @@ public class FulfilmentService {
       log.info("First vendor {} for orderId {}", orderVendor.get(orderId), orderId);
       while (selectedVendor.equals(orderVendor.get(orderId))) {
         selectedVendor = vendorSelectionComponent.getVendor(vendorsMap);
+        totalFallbackOnSameVendor++;
       }
       orderVendor.put(orderId, selectedVendor);
       log.info("Fallback vendor {} for orderId {}", selectedVendor, orderId);
+      totalFallbackRequest++;
+      updateFallbackVendors(selectedVendor);
     }
-    orderVendor.put(orderId, selectedVendor);
-    log.info("Selected vendor {} for orderId {}\n", selectedVendor, orderId);
-    updateVendors(selectedVendor);
-    if (totalRequest % 100 ==0) {
+      orderVendor.put(orderId, selectedVendor);
+      log.info("Selected vendor {} for orderId {}\n", selectedVendor, orderId);
+      updateVendors(selectedVendor);
+    if (totalRequest % 100 == 0) {
       print();
     }
     return selectedVendor;
   }
 
+  private void updateFallbackVendors(final String selectedVendor) {
+    switch (selectedVendor) {
+      case "SS": {
+        FALLBACK_SS++;
+        break;
+      }
+      case "JRI": {
+        FALLBACK_JRI++;
+        break;
+      }
+      case "PAY1": {
+        FALLBACK_PAY1++;
+        break;
+      }
+    }
+  }
+
+  /**
+   * Update vendors.
+   *
+   * @param selectedVendor the selected vendor
+   */
   private void updateVendors(final String selectedVendor) {
     switch (selectedVendor) {
       case "SS": {
@@ -85,9 +147,21 @@ public class FulfilmentService {
     }
   }
 
+  /**
+   * Print.
+   */
   private void print() {
-    log.info("SS :" + SS);
-    log.info("JRI :" + JRI);
-    log.info("PAY1 :" + PAY1);
+    log.info(Constants.SS + "% {} ", (SS *100/ totalRequest));
+    log.info(Constants.PAY1 + "% {} ", (PAY1*100 / totalRequest));
+    log.info(Constants.JRI + "% {} ",(JRI*100 / totalRequest));
+
+    log.info("Total requests {} ",totalRequest);
+    log.info("Total fallback requests {} ", totalFallbackRequest);
+    log.info("Total same vendor fallback {} ",totalFallbackOnSameVendor);
+
+    log.info(Constants.SS + " served {} fallback requests.",FALLBACK_SS);
+    log.info(Constants.PAY1 + " served {} fallback requests.",FALLBACK_PAY1);
+    log.info(Constants.JRI + " served {} fallback requests.",FALLBACK_JRI);
+
   }
 }
