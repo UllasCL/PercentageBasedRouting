@@ -102,7 +102,7 @@ public class FulfilmentService {
       orderVendor.put(orderId, selectedVendor);
       log.info("Selected vendor {} for orderId {}\n", selectedVendor, orderId);
       updateVendors(selectedVendor);
-    if (totalRequest % 100 == 0) {
+    if (totalRequest % 110 == 0) {
       print();
     }
     return selectedVendor;
@@ -151,9 +151,9 @@ public class FulfilmentService {
    * Print.
    */
   private void print() {
-    log.info(Constants.SS + "% {} ", (SS *100/ totalRequest));
-    log.info(Constants.PAY1 + "% {} ", (PAY1*100 / totalRequest));
-    log.info(Constants.JRI + "% {} ",(JRI*100 / totalRequest));
+    log.info(Constants.SS + "% {} ", (SS *100/(float) totalRequest));
+    log.info(Constants.PAY1 + "% {} ", (PAY1*100 /(float) totalRequest));
+    log.info(Constants.JRI + "% {} ",(JRI*100 / (float)totalRequest));
 
     log.info("Total requests {} ",totalRequest);
     log.info("Total fallback requests {} ", totalFallbackRequest);
