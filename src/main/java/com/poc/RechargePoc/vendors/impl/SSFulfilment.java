@@ -35,7 +35,7 @@ public class SSFulfilment implements IFulfilmentHandler {
    */
   @Override
   public String processCallback(final String orderId) {
-    log.info("SS fulfilment");
+    log.info("SS fulfilment initiated");
     try {
       dummyAPICall.dummySSCall(orderId);
     } catch (Exception e) {

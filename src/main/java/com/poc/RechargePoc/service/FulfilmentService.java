@@ -34,9 +34,9 @@ public class FulfilmentService {
   public static Map<String, Integer> vendorsMap = new ConcurrentHashMap<>();
 
   static {
-    vendorsMap.put(Constants.SS, 40);
-    vendorsMap.put(Constants.PAY1, 35);
-    vendorsMap.put(Constants.JRI, 25);
+    vendorsMap.put(Constants.SS, Constants.SS_PER);
+    vendorsMap.put(Constants.PAY1, Constants.PAY1_PER);
+    vendorsMap.put(Constants.JRI, Constants.JRI_PER);
   }
 
   /**
@@ -88,8 +88,12 @@ public class FulfilmentService {
    * @param orderId the order id
    * @return the string
    */
-  public String fulfilOrder(String orderId) throws Exception {
-    return fulfilmentRegistry.get(getVendor(orderId)).processCallback(orderId);
+  public String fulfilOrder(String orderId) {
+    var result = fulfilmentRegistry.get(getVendor(orderId)).processCallback(orderId);
+    if (result.isEmpty()) {
+      log.error("Fulfilment Failed");
+    }
+    return result;
   }
 
   /**
@@ -98,8 +102,7 @@ public class FulfilmentService {
    * @param orderId the order id
    * @return the vendor
    */
-  private String getVendor(String orderId) throws Exception {
-    //    var fallbackCount = 0; // max allowed is 2
+  private String getVendor(String orderId) {
     totalRequest++;
     var selectedVendor = vendorSelectionComponent.getVendor(vendorsMap);
     if (selectedVendor == null) {
@@ -107,17 +110,13 @@ public class FulfilmentService {
       return Strings.EMPTY;
     }
     if (orderVendor.containsKey(orderId)) {
-      //      log.info("First vendor {} for orderId {}", orderVendor.get(orderId), orderId);
+      log.info("First vendor {} for orderId {}", orderVendor.get(orderId), orderId);
       while (selectedVendor.equals(orderVendor.get(orderId))) {
-        //        fallbackCount++;
         selectedVendor = vendorSelectionComponent.getVendor(vendorsMap);
         totalFallbackOnSameVendor++;
-        //        if (fallbackCount > 2) {
-        //          throw new Exception("Invalid vendor case");
-        //        }
       }
       orderVendor.put(orderId, selectedVendor);
-      //      log.info("Fallback vendor {} for orderId {}", selectedVendor, orderId);
+      log.info("Fallback vendor {} for orderId {}", selectedVendor, orderId);
       totalFallbackRequest++;
       updateFallbackVendors(selectedVendor);
     }
@@ -178,11 +177,12 @@ public class FulfilmentService {
    * Print.
    */
   private void print() {
-    log.info(Constants.SS + "% {} ", (SS * 100 / totalRequest));
-    log.info(Constants.PAY1 + "% {} ", (PAY1 * 100 / totalRequest));
-    log.info(Constants.JRI + "% {} ", (JRI * 100 / totalRequest));
+    log.info(Constants.SS + "% {} ", (SS * 100 / (float) totalRequest));
+    log.info(Constants.PAY1 + "% {} ", (PAY1 * 100 / (float) totalRequest));
+    log.info(Constants.JRI + "% {} ", (JRI * 100 / (float) totalRequest));
 
     log.info("Total requests {} ", totalRequest);
+    log.info("Total requests without fallback {} ", totalRequest - totalFallbackRequest);
     log.info("Total fallback requests {} ", totalFallbackRequest);
     log.info("Total same vendor fallback {} ", totalFallbackOnSameVendor);
 
@@ -190,5 +190,23 @@ public class FulfilmentService {
     log.info(Constants.PAY1 + " served {} fallback requests.", FALLBACK_PAY1);
     log.info(Constants.JRI + " served {} fallback requests.", FALLBACK_JRI);
 
+    log.info(Constants.SS + "fallback % {} ", (FALLBACK_SS * 100 / (float) totalRequest));
+    log.info(Constants.PAY1 + "fallback % {} ", (FALLBACK_PAY1 * 100 / (float) totalRequest));
+    log.info(Constants.JRI + "fallback % {} ", (FALLBACK_JRI * 100 / (float) totalRequest));
+  }
+
+  /**
+   * Random success string.
+   *
+   * @param orderId the order id
+   * @return the string
+   * @throws Exception the exception
+   */
+  public String randomSuccess(String orderId) throws Exception {
+    if (Integer.parseInt(orderId) % 5 != 0) {
+      return "success";
+    } else {
+      throw new Exception("invalid case");
+    }
   }
 }

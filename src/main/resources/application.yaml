@@ -24,14 +24,14 @@ resilience4j:
     instances:
       jri:
         registerHealthIndicator: true
-        eventConsumerBufferSize: 10
-        failureRateThreshold: 50
+        eventConsumerBufferSize: 10 #TODO Explore this
+        failureRateThreshold: 40 #TODO Product will confirm
         minimumNumberOfCalls: 5
         automaticTransitionFromOpenToHalfOpenEnabled: true
         waitDurationInOpenState: 100s
         permittedNumberOfCallsInHalfOpenState: 3
-        slidingWindowSize: 10
-        slidingWindowType: COUNT_BASED
+        slidingWindowSize: 10 #TODO Explore this
+        slidingWindowType: COUNT_BASED #TODO Explore this
 
 
 #  retry:

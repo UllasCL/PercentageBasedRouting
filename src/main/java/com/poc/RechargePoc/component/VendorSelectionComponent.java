@@ -45,7 +45,11 @@ public class VendorSelectionComponent {
           }
         }
       }
+      log.info("initial serverList {}", serverList);
       Collections.shuffle(serverList, new Random(36236553229450L));
+      Collections.shuffle(serverList, new Random(36236553229450L));
+      Collections.shuffle(serverList, new Random(36236553229450L));
+      log.info("post shuffle serverList {}", serverList);
     }
 
     synchronized (position) {

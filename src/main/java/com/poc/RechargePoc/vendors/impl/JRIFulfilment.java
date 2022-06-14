@@ -36,7 +36,7 @@ public class JRIFulfilment implements IFulfilmentHandler {
    */
   @Override
   public String processCallback(final String orderId) {
-    log.info("JRI fulfilment");
+    log.info("JRI fulfilment initiated");
     try {
       return dummyAPICall.dummyJRICall(orderId);
     } catch (Exception e) {

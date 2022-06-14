@@ -17,6 +17,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/fulfilment")
 public class FulfillmentController {
 
+  /**
+   * The Fulfilment service.
+   */
   @Autowired
   private FulfilmentService fulfilmentService;
 
@@ -27,9 +30,22 @@ public class FulfillmentController {
    * @return the app version
    */
   @PostMapping(path = {"/fulfill"}, produces = {MediaType.TEXT_PLAIN_VALUE})
-  public ResponseEntity<String> fullFilOrder(@RequestParam final String orderId) throws Exception {
+  public ResponseEntity<String> fullFilOrder(@RequestParam final String orderId) {
     return new ResponseEntity<>(String.format("Selected vendor %s for order id: %s",
         fulfilmentService.fulfilOrder(orderId), orderId), HttpStatus.OK);
+  }
+
+  /**
+   * Random success response entity.
+   *
+   * @param orderId the order id
+   * @return the response entity
+   * @throws Exception the exception
+   */
+  @PostMapping(path = {"/randomSuccess"}, produces = {MediaType.TEXT_PLAIN_VALUE})
+  public ResponseEntity<String> randomSuccess(@RequestParam final String orderId) throws Exception {
+    return new ResponseEntity<>(String.format("Selected vendor %s for order id: %s",
+        fulfilmentService.randomSuccess(orderId), orderId), HttpStatus.OK);
   }
 }
 
