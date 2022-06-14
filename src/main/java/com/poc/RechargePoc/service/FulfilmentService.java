@@ -2,6 +2,7 @@ package com.poc.RechargePoc.service;
 
 import com.poc.RechargePoc.component.VendorSelectionComponent;
 import com.poc.RechargePoc.constants.Constants;
+import com.poc.RechargePoc.vendors.FulfilmentRegistry;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import lombok.extern.slf4j.Slf4j;
@@ -21,15 +22,21 @@ public class FulfilmentService {
    */
   @Autowired
   private VendorSelectionComponent vendorSelectionComponent;
+
+  /**
+   * The Fulfilment registry.
+   */
+  @Autowired
+  private FulfilmentRegistry fulfilmentRegistry;
   /**
    * The constant vendorsMap.
    */
   public static Map<String, Integer> vendorsMap = new ConcurrentHashMap<>();
 
   static {
-    vendorsMap.put(Constants.SS, 40);
-    vendorsMap.put(Constants.PAY1, 35);
-    vendorsMap.put(Constants.JRI, 25);
+    vendorsMap.put(Constants.SS, 0);
+    vendorsMap.put(Constants.PAY1, 0);
+    vendorsMap.put(Constants.JRI, 100);
   }
 
   /**
@@ -82,6 +89,17 @@ public class FulfilmentService {
    * @return the string
    */
   public String fulfilOrder(String orderId) {
+    fulfilmentRegistry.get(getVendor(orderId)).processCallback(orderId);
+    return "success";
+  }
+
+  /**
+   * Gets vendor.
+   *
+   * @param orderId the order id
+   * @return the vendor
+   */
+  private String getVendor(String orderId) {
     totalRequest++;
     var selectedVendor = vendorSelectionComponent.getVendor(vendorsMap);
     if (selectedVendor == null) {
@@ -99,15 +117,20 @@ public class FulfilmentService {
       totalFallbackRequest++;
       updateFallbackVendors(selectedVendor);
     }
-      orderVendor.put(orderId, selectedVendor);
-      log.info("Selected vendor {} for orderId {}\n", selectedVendor, orderId);
-      updateVendors(selectedVendor);
+    orderVendor.put(orderId, selectedVendor);
+    log.info("Selected vendor {} for orderId {}\n", selectedVendor, orderId);
+    updateVendors(selectedVendor);
     if (totalRequest % 100 == 0) {
       print();
     }
     return selectedVendor;
   }
 
+  /**
+   * Update fallback vendors.
+   *
+   * @param selectedVendor the selected vendor
+   */
   private void updateFallbackVendors(final String selectedVendor) {
     switch (selectedVendor) {
       case "SS": {
@@ -151,17 +174,17 @@ public class FulfilmentService {
    * Print.
    */
   private void print() {
-    log.info(Constants.SS + "% {} ", (SS *100/ totalRequest));
-    log.info(Constants.PAY1 + "% {} ", (PAY1*100 / totalRequest));
-    log.info(Constants.JRI + "% {} ",(JRI*100 / totalRequest));
+    log.info(Constants.SS + "% {} ", (SS * 100 / totalRequest));
+    log.info(Constants.PAY1 + "% {} ", (PAY1 * 100 / totalRequest));
+    log.info(Constants.JRI + "% {} ", (JRI * 100 / totalRequest));
 
-    log.info("Total requests {} ",totalRequest);
+    log.info("Total requests {} ", totalRequest);
     log.info("Total fallback requests {} ", totalFallbackRequest);
-    log.info("Total same vendor fallback {} ",totalFallbackOnSameVendor);
+    log.info("Total same vendor fallback {} ", totalFallbackOnSameVendor);
 
-    log.info(Constants.SS + " served {} fallback requests.",FALLBACK_SS);
-    log.info(Constants.PAY1 + " served {} fallback requests.",FALLBACK_PAY1);
-    log.info(Constants.JRI + " served {} fallback requests.",FALLBACK_JRI);
+    log.info(Constants.SS + " served {} fallback requests.", FALLBACK_SS);
+    log.info(Constants.PAY1 + " served {} fallback requests.", FALLBACK_PAY1);
+    log.info(Constants.JRI + " served {} fallback requests.", FALLBACK_JRI);
 
   }
 }
