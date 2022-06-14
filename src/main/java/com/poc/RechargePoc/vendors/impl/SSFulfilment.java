@@ -37,7 +37,7 @@ public class SSFulfilment implements IFulfilmentHandler {
   public String processCallback(final String orderId) {
     log.info("SS fulfilment initiated");
     try {
-      dummyAPICall.dummySSCall(orderId);
+      return dummyAPICall.dummySSCall(orderId, Constants.SS);
     } catch (Exception e) {
       log.error("SS fulfilment failed");
     }

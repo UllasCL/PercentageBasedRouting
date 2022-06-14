@@ -200,13 +200,8 @@ public class FulfilmentService {
    *
    * @param orderId the order id
    * @return the string
-   * @throws Exception the exception
    */
-  public String randomSuccess(String orderId) throws Exception {
-    if (Integer.parseInt(orderId) % 5 != 0) {
-      return "success";
-    } else {
-      throw new Exception("invalid case");
-    }
+  public String randomSuccess(String orderId) {
+    return "success";
   }
 }

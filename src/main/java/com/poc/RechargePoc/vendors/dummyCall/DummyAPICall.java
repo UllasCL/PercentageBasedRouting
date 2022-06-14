@@ -26,21 +26,22 @@ public class DummyAPICall {
    */
   private static int JRI_COUNT = 0;
 
+  //  /**
+  //   * The Jri.
+  //   */
+  //  @Autowired
+  //  private CircuitBreaker jri;
+
   /**
    * Dummy ss call.
    *
    * @param orderId the order id
    * @return the string
-   * @throws Exception the exception
    */
-  @CircuitBreaker(name = "ss", fallbackMethod = "fallback")
-  public String dummySSCall(String orderId) throws Exception {
+    @CircuitBreaker(name = "ss", fallbackMethod = "fallback")
+  public String dummySSCall(String orderId, String vendor) {
     SS_COUNT++;
-    RestTemplate restTemplate = new RestTemplate();
-    String url = String.format(
-        "http://localhost:8080/recharge/poc/fulfilment/randomSuccess?orderId=%s", orderId);
-    restTemplate.postForObject(url, null, String.class);
-    return Constants.SS;
+    return callRandomSuccess(orderId, Constants.SS);
   }
 
   /**
@@ -48,17 +49,11 @@ public class DummyAPICall {
    *
    * @param orderId the order id
    * @return the string
-   * @throws Exception the exception
    */
-  @CircuitBreaker(name = "payOne", fallbackMethod = "fallback")
-  public String dummyPAY1Call(String orderId) throws Exception {
+    @CircuitBreaker(name = "payOne", fallbackMethod = "fallback")
+  public String dummyPAY1Call(String orderId,String vendor) {
     PAY1_COUNT++;
-    RestTemplate restTemplate = new RestTemplate();
-
-    String url = String.format(
-        "http://localhost:8080/recharge/poc/fulfilment/randomSuccess?orderId=%s", orderId);
-    restTemplate.postForObject(url, null, String.class);
-    return Constants.PAY1;
+    return callRandomSuccess(orderId, Constants.PAY1);
   }
 
   /**
@@ -68,24 +63,41 @@ public class DummyAPICall {
    * @return the string
    */
   @CircuitBreaker(name = "jri", fallbackMethod = "fallback")
-  public String dummyJRICall(String orderId) {
+  public String dummyJRICall(String orderId,String vendor) {
     JRI_COUNT++;
-    RestTemplate restTemplate = new RestTemplate();
-    String url = String.format(
-        "http://localhost:8080/recharge/poc/fulfilment/randomSuccess?orderId=%s", orderId);
-    restTemplate.postForObject(url, null, String.class);
-    return Constants.JRI;
+    return callRandomSuccess(orderId, Constants.JRI);
   }
 
   /**
    * Test.
    *
-   * @param e the e
+   * @param orderId the order id
+   * @param e       the e
    * @return the string
    */
-  private String fallback(Exception e) {
-    log.info("fallback");
+  private String fallback(String orderId,String vendor, Exception e) {
+    log.info("fallback orderId {} and vendor is {}",orderId, vendor);
     // TODO Reschedule fulfillment with simulated time gap.
-    return "fallback";
+    return e.getMessage();
+  }
+
+  /**
+   * Call random success.
+   *
+   * @param orderId the order id
+   * @param vendor  the vendor
+   * @return the string
+   */
+  private String callRandomSuccess(String orderId, String vendor) {
+    RestTemplate restTemplate = new RestTemplate();
+    String url= String.format(
+        "http://localhost:8080/recharge/poc/fulfilment/randomSuccess?orderId=%s", orderId);
+    if(Integer.parseInt(orderId)%5==0){
+       url = String.format(
+          "http://localhost:8080/recharge/poc/fulfilment/invalid?orderId=%s", orderId);
+    }
+
+    restTemplate.postForObject(url, null, String.class);
+    return vendor;
   }
 }

@@ -26,6 +26,7 @@ dependencies {
 	implementation('org.springframework.boot:spring-boot-starter-aop')
 	implementation 'io.github.resilience4j:resilience4j-spring-boot2:1.5.0'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+//	implementation group: 'io.github.resilience4j', name: 'resilience4j-all', version: '1.7.1'
 
 }
 

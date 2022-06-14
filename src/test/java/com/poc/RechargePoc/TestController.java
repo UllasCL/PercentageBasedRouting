@@ -12,8 +12,8 @@ public class TestController {
    * @param args the input arguments
    */
   public static void main(String[] args) {
-    call100APIs();
-    callModule5Apis();
+    call200APIs();
+    //    callModule5Apis();
   }
 
   /**
@@ -28,8 +28,8 @@ public class TestController {
   /**
    * Call 100 ap is.
    */
-  private static void call100APIs() {
-    for (int i = 0; i < 100; i++) {
+  private static void call200APIs() {
+    for (int i = 0; i < 200; i++) {
       callApi(i);
     }
   }

@@ -32,6 +32,26 @@ resilience4j:
         permittedNumberOfCallsInHalfOpenState: 3
         slidingWindowSize: 10 #TODO Explore this
         slidingWindowType: COUNT_BASED #TODO Explore this
+      ss:
+        registerHealthIndicator: true
+        eventConsumerBufferSize: 10 #TODO Explore this
+        failureRateThreshold: 40 #TODO Product will confirm
+        minimumNumberOfCalls: 5
+        automaticTransitionFromOpenToHalfOpenEnabled: true
+        waitDurationInOpenState: 100s
+        permittedNumberOfCallsInHalfOpenState: 3
+        slidingWindowSize: 10 #TODO Explore this
+        slidingWindowType: COUNT_BASED #TODO Explore this
+      payOne:
+        registerHealthIndicator: true
+        eventConsumerBufferSize: 10 #TODO Explore this
+        failureRateThreshold: 40 #TODO Product will confirm
+        minimumNumberOfCalls: 5
+        automaticTransitionFromOpenToHalfOpenEnabled: true
+        waitDurationInOpenState: 100s
+        permittedNumberOfCallsInHalfOpenState: 3
+        slidingWindowSize: 10 #TODO Explore this
+        slidingWindowType: COUNT_BASED #TODO Explore this
 
 
 #  retry:

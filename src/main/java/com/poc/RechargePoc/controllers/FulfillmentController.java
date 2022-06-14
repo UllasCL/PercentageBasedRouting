@@ -40,11 +40,10 @@ public class FulfillmentController {
    *
    * @param orderId the order id
    * @return the response entity
-   * @throws Exception the exception
    */
   @PostMapping(path = {"/randomSuccess"}, produces = {MediaType.TEXT_PLAIN_VALUE})
-  public ResponseEntity<String> randomSuccess(@RequestParam final String orderId) throws Exception {
-    return new ResponseEntity<>(String.format("Selected vendor %s for order id: %s",
+  public ResponseEntity<String> randomSuccess(@RequestParam final String orderId) {
+    return new ResponseEntity<>(String.format("Random %s for order id: %s",
         fulfilmentService.randomSuccess(orderId), orderId), HttpStatus.OK);
   }
 }
