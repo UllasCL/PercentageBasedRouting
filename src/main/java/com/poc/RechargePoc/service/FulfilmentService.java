@@ -100,6 +100,7 @@ public class FulfilmentService {
    * @return the vendor
    */
   private String getVendor(String orderId) {
+    var fallbackCount = 0; // max allowed is 2
     totalRequest++;
     var selectedVendor = vendorSelectionComponent.getVendor(vendorsMap);
     if (selectedVendor == null) {
@@ -108,7 +109,8 @@ public class FulfilmentService {
     }
     if (orderVendor.containsKey(orderId)) {
       log.info("First vendor {} for orderId {}", orderVendor.get(orderId), orderId);
-      while (selectedVendor.equals(orderVendor.get(orderId))) {
+      while (selectedVendor.equals(orderVendor.get(orderId)) && fallbackCount < 3) {
+        fallbackCount++;
         selectedVendor = vendorSelectionComponent.getVendor(vendorsMap);
         totalFallbackOnSameVendor++;
       }

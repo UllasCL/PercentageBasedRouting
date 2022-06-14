@@ -27,7 +27,6 @@ public class FulfilmentRegistry implements IRegistry<String, IFulfilmentHandler>
   @Override
   public void register(final String key, final IFulfilmentHandler value) {
     FulfilmentRegistry.put(key, value);
-
   }
 
   /**

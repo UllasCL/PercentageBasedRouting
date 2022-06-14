@@ -36,7 +36,7 @@ public class JRIFulfilment implements IFulfilmentHandler {
   public void processCallback(final String responseBody) {
     log.info("JRI fulfilment");
     try {
-      dummyAPICall.dummyJRICall();
+     var result = dummyAPICall.dummyJRICall(responseBody);
     } catch (Exception e) {
       log.error("JRI fulfilment failed");
     }

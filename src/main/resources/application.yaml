@@ -22,16 +22,6 @@ management:
 resilience4j:
   circuitbreaker:
     instances:
-      ss:
-        registerHealthIndicator: true
-        eventConsumerBufferSize: 10
-        failureRateThreshold: 50
-        minimumNumberOfCalls: 5
-        automaticTransitionFromOpenToHalfOpenEnabled: true
-        waitDurationInOpenState: 5s
-        permittedNumberOfCallsInHalfOpenState: 3
-        slidingWindowSize: 10
-        slidingWindowType: COUNT_BASED
       jri:
         registerHealthIndicator: true
         eventConsumerBufferSize: 10
@@ -42,26 +32,16 @@ resilience4j:
         permittedNumberOfCallsInHalfOpenState: 3
         slidingWindowSize: 10
         slidingWindowType: COUNT_BASED
-      payOne:
-        registerHealthIndicator: true
-        eventConsumerBufferSize: 10
-        failureRateThreshold: 50
-        minimumNumberOfCalls: 5
-        automaticTransitionFromOpenToHalfOpenEnabled: true
-        waitDurationInOpenState: 5s
-        permittedNumberOfCallsInHalfOpenState: 3
-        slidingWindowSize: 10
-        slidingWindowType: COUNT_BASED
 
 
-  retry:
-    instances:
-      ss:
-        maxRetryAttempts: 5
-        waitDuration: 10s
-      jri:
-        maxRetryAttempts: 5
-        waitDuration: 10s
-      payOne:
-        maxRetryAttempts: 5
-        waitDuration: 10s
+#  retry:
+#    instances:
+#      ss:
+#        maxRetryAttempts: 5
+#        waitDuration: 10s
+#      jri:
+#        maxRetryAttempts: 5
+#        waitDuration: 10s
+#      payOne:
+#        maxRetryAttempts: 5
+#        waitDuration: 10s
