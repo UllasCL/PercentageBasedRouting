@@ -2,6 +2,7 @@ package com.poc.RechargePoc.vendors.dummyCall;
 
 import com.poc.RechargePoc.constants.Constants;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import java.util.Random;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -14,33 +15,14 @@ import org.springframework.web.client.RestTemplate;
 public class DummyAPICall {
 
   /**
-   * The constant SS_COUNT.
-   */
-  private static int SS_COUNT = 0;
-  /**
-   * The constant PAY1_COUNT.
-   */
-  private static int PAY1_COUNT = 0;
-  /**
-   * The constant JRI_COUNT.
-   */
-  private static int JRI_COUNT = 0;
-
-  //  /**
-  //   * The Jri.
-  //   */
-  //  @Autowired
-  //  private CircuitBreaker jri;
-
-  /**
    * Dummy ss call.
    *
    * @param orderId the order id
+   * @param vendor  the vendor
    * @return the string
    */
-    @CircuitBreaker(name = "ss", fallbackMethod = "fallback")
+  @CircuitBreaker(name = "ss", fallbackMethod = "fallback")
   public String dummySSCall(String orderId, String vendor) {
-    SS_COUNT++;
     return callRandomSuccess(orderId, Constants.SS);
   }
 
@@ -48,11 +30,11 @@ public class DummyAPICall {
    * Dummy pay 1 call.
    *
    * @param orderId the order id
+   * @param vendor  the vendor
    * @return the string
    */
-    @CircuitBreaker(name = "payOne", fallbackMethod = "fallback")
-  public String dummyPAY1Call(String orderId,String vendor) {
-    PAY1_COUNT++;
+  @CircuitBreaker(name = "payOne", fallbackMethod = "fallback")
+  public String dummyPAY1Call(String orderId, String vendor) {
     return callRandomSuccess(orderId, Constants.PAY1);
   }
 
@@ -60,11 +42,11 @@ public class DummyAPICall {
    * Dummy jri call.
    *
    * @param orderId the order id
+   * @param vendor  the vendor
    * @return the string
    */
   @CircuitBreaker(name = "jri", fallbackMethod = "fallback")
-  public String dummyJRICall(String orderId,String vendor) {
-    JRI_COUNT++;
+  public String dummyJRICall(String orderId, String vendor) {
     return callRandomSuccess(orderId, Constants.JRI);
   }
 
@@ -72,13 +54,15 @@ public class DummyAPICall {
    * Test.
    *
    * @param orderId the order id
+   * @param vendor  the vendor
    * @param e       the e
    * @return the string
    */
-  private String fallback(String orderId,String vendor, Exception e) {
-    log.info("fallback orderId {} and vendor is {}",orderId, vendor);
-    // TODO Reschedule fulfillment with simulated time gap.
-    return e.getMessage();
+  private String fallback(String orderId, String vendor, Exception e) {
+    log.info("Fallback orderId {} and old vendor is {}", orderId, vendor);
+    // Reschedule fulfillment with simulated time gap.
+    rescheduledCall(orderId, vendor);
+    return vendor;
   }
 
   /**
@@ -90,14 +74,36 @@ public class DummyAPICall {
    */
   private String callRandomSuccess(String orderId, String vendor) {
     RestTemplate restTemplate = new RestTemplate();
-    String url= String.format(
+    Random random = new Random();
+    String url = String.format(
         "http://localhost:8080/recharge/poc/fulfilment/randomSuccess?orderId=%s", orderId);
-    if(Integer.parseInt(orderId)%5==0){
-       url = String.format(
+    if (random.nextInt(100) < 10) {
+      //log.info("Order id {} random number less than {}", orderId, 10);
+      url = String.format(
           "http://localhost:8080/recharge/poc/fulfilment/invalid?orderId=%s", orderId);
     }
-
     restTemplate.postForObject(url, null, String.class);
     return vendor;
+  }
+
+  /**
+   * Call api again string.
+   *
+   * @param orderId the order id
+   * @param vendor  the vendor
+   */
+  private void rescheduledCall(String orderId, String vendor) {
+    log.info("Rescheduled order {}", orderId);
+
+    RestTemplate restTemplate = new RestTemplate();
+    String url = String.format("http://localhost:8080/recharge/poc/fulfilment/fulfill?orderId=%s",
+        orderId);
+
+    try {
+      Thread.sleep(500);
+    } catch (InterruptedException e) {
+      e.printStackTrace();
+    }
+    restTemplate.postForObject(url, null, String.class);
   }
 }

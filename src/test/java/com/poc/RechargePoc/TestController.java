@@ -12,25 +12,20 @@ public class TestController {
    * @param args the input arguments
    */
   public static void main(String[] args) {
-    call200APIs();
-    //    callModule5Apis();
-  }
-
-  /**
-   * Call module 5 apis.
-   */
-  private static void callModule5Apis() {
-    for (int i = 0; i < 100; i = i + 5) {
-      callApi(i);
-    }
+    callAPIs();
   }
 
   /**
    * Call 100 ap is.
    */
-  private static void call200APIs() {
-    for (int i = 0; i < 200; i++) {
+  private static void callAPIs() {
+    for (int i = 0; i < Constants.numberOfRequests; i++) {
       callApi(i);
+      try {
+        Thread.sleep(500);
+      } catch (InterruptedException e) {
+        System.out.println(e.getMessage());
+      }
     }
   }
 

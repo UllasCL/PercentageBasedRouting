@@ -110,13 +110,13 @@ public class FulfilmentService {
       return Strings.EMPTY;
     }
     if (orderVendor.containsKey(orderId)) {
-      log.info("First vendor {} for orderId {}", orderVendor.get(orderId), orderId);
+      log.info("First vendor was {} for orderId {}", orderVendor.get(orderId), orderId);
       while (selectedVendor.equals(orderVendor.get(orderId))) {
         selectedVendor = vendorSelectionComponent.getVendor(vendorsMap);
         totalFallbackOnSameVendor++;
       }
       orderVendor.put(orderId, selectedVendor);
-      log.info("Fallback vendor {} for orderId {}", selectedVendor, orderId);
+      // log.info("Fallback vendor {} for orderId {}", selectedVendor, orderId);
       totalFallbackRequest++;
       updateFallbackVendors(selectedVendor);
     }
@@ -203,5 +203,21 @@ public class FulfilmentService {
    */
   public String randomSuccess(String orderId) {
     return "success";
+  }
+
+  /**
+   * Clear stored data.
+   */
+  private void clearStoredData() {
+    FALLBACK_PAY1 = 0;
+    FALLBACK_JRI = 0;
+    FALLBACK_SS = 0;
+    SS = 0;
+    PAY1 = 0;
+    JRI = 0;
+    totalRequest = 0;
+    totalFallbackRequest = 0;
+    totalFallbackOnSameVendor = 0;
+    log.info("stored data cleared");
   }
 }
