@@ -8,6 +8,7 @@ import javax.annotation.PostConstruct;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.stereotype.Component;
 
 /**
@@ -31,16 +32,18 @@ public class PAY1Fulfilment implements IFulfilmentHandler {
    * ‸
    * Process callback.
    *
-   * @param responseBody the response body
+   * @param orderId the order id
+   * @return the string
    */
   @Override
-  public void processCallback(final String responseBody) {
+  public String processCallback(final String orderId) {
     log.info("Pay1 fulfilment");
     try {
-       dummyAPICall.dummyPAY1Call();
+     return dummyAPICall.dummyPAY1Call(orderId);
     } catch (Exception e) {
-      e.printStackTrace();
+      log.error("PAY1 fulfilment failed");
     }
+    return Strings.EMPTY;
   }
 
   /**

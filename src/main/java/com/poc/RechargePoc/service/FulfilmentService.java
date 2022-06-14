@@ -34,9 +34,9 @@ public class FulfilmentService {
   public static Map<String, Integer> vendorsMap = new ConcurrentHashMap<>();
 
   static {
-    vendorsMap.put(Constants.SS, 0);
-    vendorsMap.put(Constants.PAY1, 0);
-    vendorsMap.put(Constants.JRI, 100);
+    vendorsMap.put(Constants.SS, 40);
+    vendorsMap.put(Constants.PAY1, 35);
+    vendorsMap.put(Constants.JRI, 25);
   }
 
   /**
@@ -88,9 +88,8 @@ public class FulfilmentService {
    * @param orderId the order id
    * @return the string
    */
-  public String fulfilOrder(String orderId) {
-    fulfilmentRegistry.get(getVendor(orderId)).processCallback(orderId);
-    return "success";
+  public String fulfilOrder(String orderId) throws Exception {
+    return fulfilmentRegistry.get(getVendor(orderId)).processCallback(orderId);
   }
 
   /**
@@ -99,8 +98,8 @@ public class FulfilmentService {
    * @param orderId the order id
    * @return the vendor
    */
-  private String getVendor(String orderId) {
-    var fallbackCount = 0; // max allowed is 2
+  private String getVendor(String orderId) throws Exception {
+    //    var fallbackCount = 0; // max allowed is 2
     totalRequest++;
     var selectedVendor = vendorSelectionComponent.getVendor(vendorsMap);
     if (selectedVendor == null) {
@@ -108,14 +107,17 @@ public class FulfilmentService {
       return Strings.EMPTY;
     }
     if (orderVendor.containsKey(orderId)) {
-      log.info("First vendor {} for orderId {}", orderVendor.get(orderId), orderId);
-      while (selectedVendor.equals(orderVendor.get(orderId)) && fallbackCount < 3) {
-        fallbackCount++;
+      //      log.info("First vendor {} for orderId {}", orderVendor.get(orderId), orderId);
+      while (selectedVendor.equals(orderVendor.get(orderId))) {
+        //        fallbackCount++;
         selectedVendor = vendorSelectionComponent.getVendor(vendorsMap);
         totalFallbackOnSameVendor++;
+        //        if (fallbackCount > 2) {
+        //          throw new Exception("Invalid vendor case");
+        //        }
       }
       orderVendor.put(orderId, selectedVendor);
-      log.info("Fallback vendor {} for orderId {}", selectedVendor, orderId);
+      //      log.info("Fallback vendor {} for orderId {}", selectedVendor, orderId);
       totalFallbackRequest++;
       updateFallbackVendors(selectedVendor);
     }

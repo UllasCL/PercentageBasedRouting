@@ -10,7 +10,7 @@ public interface IFulfilmentHandler {
    *
    * @param responseBody the response body
    */
-  void processCallback(final String responseBody);
+  String processCallback(final String responseBody);
 
   /**
    * Register.

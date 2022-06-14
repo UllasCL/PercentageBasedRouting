@@ -27,7 +27,7 @@ public class FulfillmentController {
    * @return the app version
    */
   @PostMapping(path = {"/fulfill"}, produces = {MediaType.TEXT_PLAIN_VALUE})
-  public ResponseEntity<String> fullFilOrder(@RequestParam final String orderId) {
+  public ResponseEntity<String> fullFilOrder(@RequestParam final String orderId) throws Exception {
     return new ResponseEntity<>(String.format("Selected vendor %s for order id: %s",
         fulfilmentService.fulfilOrder(orderId), orderId), HttpStatus.OK);
   }

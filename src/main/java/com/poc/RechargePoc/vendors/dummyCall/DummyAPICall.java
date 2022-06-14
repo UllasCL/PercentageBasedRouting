@@ -1,5 +1,6 @@
 package com.poc.RechargePoc.vendors.dummyCall;
 
+import com.poc.RechargePoc.constants.Constants;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,11 +33,12 @@ public class DummyAPICall {
    * @throws Exception the exception
    */
   //   @CircuitBreaker(name = "ss", fallbackMethod = "getAllAvailableProducts")
-  public void dummySSCall() throws Exception {
+  public String dummySSCall(String orderId) throws Exception {
     SS_COUNT++;
-    if (SS_COUNT > 5) {
-      throw new Exception("SS crossed 5 requests");
-    }
+    RestTemplate restTemplate = new RestTemplate();
+    String url = String.format("http://localhost:8081/test/%s", orderId);
+    restTemplate.postForObject(url, null, String.class);
+    return Constants.SS;
   }
 
   /**
@@ -45,11 +47,12 @@ public class DummyAPICall {
    * @throws Exception the exception
    */
   // @CircuitBreaker(name = "payOne", fallbackMethod = "getAllAvailableProducts")
-  public void dummyPAY1Call() throws Exception {
+  public String dummyPAY1Call(String orderId) throws Exception {
     PAY1_COUNT++;
-    if (PAY1_COUNT > 10) {
-      throw new Exception("PAY1 crossed 10 requests");
-    }
+    RestTemplate restTemplate = new RestTemplate();
+    String url = String.format("http://localhost:8081/test/%s", orderId);
+    restTemplate.postForObject(url, null, String.class);
+    return Constants.PAY1;
   }
 
   /**
@@ -63,7 +66,7 @@ public class DummyAPICall {
     RestTemplate restTemplate = new RestTemplate();
     String url = String.format("http://localhost:8081/test/%s", orderId);
     restTemplate.postForObject(url, null, String.class);
-    return "success";
+    return Constants.JRI;
   }
 
   /**
@@ -71,6 +74,7 @@ public class DummyAPICall {
    */
   private String test(Exception e) {
     log.info("fallback");
+    // Reschedule fulfillment.
     return "fallback";
   }
 }

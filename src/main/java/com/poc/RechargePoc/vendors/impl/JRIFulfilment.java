@@ -7,6 +7,7 @@ import com.poc.RechargePoc.vendors.dummyCall.DummyAPICall;
 import javax.annotation.PostConstruct;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.stereotype.Component;
 
 /**
@@ -25,21 +26,23 @@ public class JRIFulfilment implements IFulfilmentHandler {
   /**
    * The Dummy api call.
    */
-  private DummyAPICall dummyAPICall;
+  private final DummyAPICall dummyAPICall;
 
   /**
    * Process callback.
    *
-   * @param responseBody the response body
+   * @param orderId the order id
+   * @return the string
    */
   @Override
-  public void processCallback(final String responseBody) {
+  public String processCallback(final String orderId) {
     log.info("JRI fulfilment");
     try {
-     var result = dummyAPICall.dummyJRICall(responseBody);
+      return dummyAPICall.dummyJRICall(orderId);
     } catch (Exception e) {
       log.error("JRI fulfilment failed");
     }
+    return Strings.EMPTY;
   }
 
   /**
