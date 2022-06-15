@@ -6,6 +6,7 @@ import io.github.resilience4j.circuitbreaker.CallNotPermittedException;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import java.util.Random;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -15,6 +16,12 @@ import org.springframework.web.client.RestTemplate;
 @Slf4j
 @Service
 public class DummyAPICall {
+
+  /**
+   * The Is fallback required.
+   */
+  @Value("${fallback.isRequired}")
+  private Boolean isFallbackRequired;
 
   /**
    * Dummy ss call.
@@ -96,7 +103,7 @@ public class DummyAPICall {
     Random random = new Random();
     String url = String.format(
         "http://localhost:8080/recharge/poc/fulfilment/randomSuccess?orderId=%s", orderId);
-    if (random.nextInt(100) < Constants.FAILURE_RATE) {
+    if ((random.nextInt(100) < Constants.FAILURE_RATE) && isFallbackRequired) {
       //log.info("Order id {} random number less than {}", orderId, 10);
       url = String.format(
           "http://localhost:8080/recharge/poc/fulfilment/invalid?orderId=%s", orderId);

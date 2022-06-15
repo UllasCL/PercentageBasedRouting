@@ -54,14 +54,5 @@ resilience4j:
         slidingWindowType: COUNT_BASED
 
 
-#  retry:
-#    instances:
-#      ss:
-#        maxRetryAttempts: 5
-#        waitDuration: 10s
-#      jri:
-#        maxRetryAttempts: 5
-#        waitDuration: 10s
-#      payOne:
-#        maxRetryAttempts: 5
-#        waitDuration: 10s
+fallback:
+  isRequired: false

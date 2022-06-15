@@ -188,26 +188,45 @@ public class FulfilmentService {
    * Print.
    */
   private void print() {
+
+    log.info("\n-------------------------------------------------------------------Result"
+        + "-------------------------------------------------------------------\n");
+
+    log.info("\n----------------------------------------------------------Requested % distribution"
+        + "-------------------------------------------------------------------\n");
+
+    vendorsMap.forEach((key,value) -> log.info("{} {}",key,value));
+
+    log.info("\n----------------------------------------------------------Actual % distribution"
+        + "-------------------------------------------------------------------\n");
     log.info(Constants.SS + "% {} ", (SS * 100 / (float) totalRequest));
     log.info(Constants.PAY1 + "% {} ", (PAY1 * 100 / (float) totalRequest));
-    log.info(Constants.JRI + "% {} ", (JRI * 100 / (float) totalRequest));
+    log.info(Constants.JRI + "% {} \n", (JRI * 100 / (float) totalRequest));
 
+    log.info("\n----------------------------------------------------------Requested data"
+        + "-------------------------------------------------------------------\n");
     log.info("Total requests {} ", totalRequest);
     log.info("Total requests without fallback {} ", totalRequest - totalFallbackRequest);
-    log.info("Total fallback requests {} ", totalFallbackRequest);
+    log.info("Total fallback requests {} \n", totalFallbackRequest);
     //log.info("Total same vendor fallback {} ", totalFallbackOnSameVendor);
 
+    log.info("\n----------------------------------------------------------Fallback data"
+        + "-------------------------------------------------------------------\n");
     log.info(Constants.SS + " served {} fallback requests.", FALLBACK_SS);
     log.info(Constants.PAY1 + " served {} fallback requests.", FALLBACK_PAY1);
-    log.info(Constants.JRI + " served {} fallback requests.", FALLBACK_JRI);
+    log.info(Constants.JRI + " served {} fallback requests.\n", FALLBACK_JRI);
 
+    log.info("\n----------------------------------------------------------Fallback % distribution"
+        + "-------------------------------------------------------------------\n");
     log.info(Constants.SS + "fallback % {} ", (FALLBACK_SS * 100 / (float) totalRequest));
     log.info(Constants.PAY1 + "fallback % {} ", (FALLBACK_PAY1 * 100 / (float) totalRequest));
-    log.info(Constants.JRI + "fallback % {} ", (FALLBACK_JRI * 100 / (float) totalRequest));
+    log.info(Constants.JRI + "fallback % {} \n", (FALLBACK_JRI * 100 / (float) totalRequest));
 
+    log.info("\n\n----------------------------------------------------------Circuit break data"
+        + "-------------------------------------------------------------------");
     log.info("Total requests when SS circuit is open {} ", SS_CIRCUIT_OPEN);
     log.info("Total requests when PAY1 circuit is open {} ", PAY1_CIRCUIT_OPEN);
-    log.info("Total requests when JRI circuit is open {} ", JRI_CIRCUIT_OPEN);
+    log.info("Total requests when JRI circuit is open {} \n", JRI_CIRCUIT_OPEN);
 
   }
 
