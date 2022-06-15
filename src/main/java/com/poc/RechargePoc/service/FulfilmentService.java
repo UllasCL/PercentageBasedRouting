@@ -187,7 +187,7 @@ public class FulfilmentService {
   /**
    * Print.
    */
-  private void print() {
+  public void print() {
 
     log.info("\n-------------------------------------------------------------------Result"
         + "-------------------------------------------------------------------\n");
@@ -223,7 +223,7 @@ public class FulfilmentService {
     log.info(Constants.JRI + "fallback % {} \n", (FALLBACK_JRI * 100 / (float) totalRequest));
 
     log.info("\n\n----------------------------------------------------------Circuit break data"
-        + "-------------------------------------------------------------------");
+        + "-------------------------------------------------------------------\n");
     log.info("Total requests when SS circuit is open {} ", SS_CIRCUIT_OPEN);
     log.info("Total requests when PAY1 circuit is open {} ", PAY1_CIRCUIT_OPEN);
     log.info("Total requests when JRI circuit is open {} \n", JRI_CIRCUIT_OPEN);

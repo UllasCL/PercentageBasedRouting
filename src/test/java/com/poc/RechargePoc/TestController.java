@@ -12,7 +12,8 @@ public class TestController {
    * @param args the input arguments
    */
   public static void main(String[] args) {
-    callAPIs();
+    //    callAPIs();
+    print();
   }
 
   /**
@@ -41,6 +42,19 @@ public class TestController {
         orderId);
 
     String answer = restTemplate.postForObject(url, null, String.class);
+    System.out.println(answer);
+  }
+
+
+  /**
+   * Print.
+   */
+  private static void print() {
+    RestTemplate restTemplate = new RestTemplate();
+
+    String url = "http://localhost:8080/recharge/poc/fulfilment/print";
+
+    String answer = restTemplate.getForObject(url, String.class);
     System.out.println(answer);
   }
 }

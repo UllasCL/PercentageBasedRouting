@@ -33,5 +33,5 @@ public class Constants {
   /**
    * The constant FAILURE_RATE.
    */
-  public static Integer FAILURE_RATE = 25;
+  public static Integer FAILURE_RATE = 10;
 }

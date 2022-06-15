@@ -25,34 +25,34 @@ resilience4j:
       jri:
         registerHealthIndicator: true
         eventConsumerBufferSize: 10
-        failureRateThreshold: 40 #TODO Product will confirm
+        failureRateThreshold: 30 #TODO Product will confirm
         minimumNumberOfCalls: 50
         automaticTransitionFromOpenToHalfOpenEnabled: false
         waitDurationInOpenState: 60s
         permittedNumberOfCallsInHalfOpenState: 3
-        slidingWindowSize: 25
+        slidingWindowSize: 50
         slidingWindowType: COUNT_BASED
       ss:
         registerHealthIndicator: true
         eventConsumerBufferSize: 10
-        failureRateThreshold: 50
+        failureRateThreshold: 30
         minimumNumberOfCalls: 50
         automaticTransitionFromOpenToHalfOpenEnabled: false
         waitDurationInOpenState: 60s
         permittedNumberOfCallsInHalfOpenState: 3
-        slidingWindowSize: 20
+        slidingWindowSize: 50
         slidingWindowType: COUNT_BASED
       payOne:
         registerHealthIndicator: true
         eventConsumerBufferSize: 10
-        failureRateThreshold: 40
+        failureRateThreshold: 30
         minimumNumberOfCalls: 50
         automaticTransitionFromOpenToHalfOpenEnabled: false
         waitDurationInOpenState: 60s
         permittedNumberOfCallsInHalfOpenState: 3
-        slidingWindowSize: 10
+        slidingWindowSize: 50
         slidingWindowType: COUNT_BASED
 
 
 fallback:
-  isRequired: false
+  isRequired: true
