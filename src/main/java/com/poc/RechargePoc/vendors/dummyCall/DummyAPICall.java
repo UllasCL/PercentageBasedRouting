@@ -1,6 +1,8 @@
 package com.poc.RechargePoc.vendors.dummyCall;
 
 import com.poc.RechargePoc.constants.Constants;
+import com.poc.RechargePoc.service.FulfilmentService;
+import io.github.resilience4j.circuitbreaker.CallNotPermittedException;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import java.util.Random;
 import lombok.extern.slf4j.Slf4j;
@@ -66,6 +68,23 @@ public class DummyAPICall {
   }
 
   /**
+   * Fallback string.
+   *
+   * @param orderId the order id
+   * @param vendor  the vendor
+   * @param e       the e
+   * @return the string
+   */
+  private String fallback(String orderId, String vendor, CallNotPermittedException e) {
+    log.error("Circuit is opened for vendor {}", vendor);
+    log.info("Fallback orderId {} and old vendor is {}", orderId, vendor);
+    updateCircuitOpen(vendor);
+    // Reschedule fulfillment with simulated time gap.
+    rescheduledCall(orderId, vendor);
+    return vendor;
+  }
+
+  /**
    * Call random success.
    *
    * @param orderId the order id
@@ -77,12 +96,13 @@ public class DummyAPICall {
     Random random = new Random();
     String url = String.format(
         "http://localhost:8080/recharge/poc/fulfilment/randomSuccess?orderId=%s", orderId);
-    if (random.nextInt(100) < 10) {
+    if (random.nextInt(100) < Constants.FAILURE_RATE) {
       //log.info("Order id {} random number less than {}", orderId, 10);
       url = String.format(
           "http://localhost:8080/recharge/poc/fulfilment/invalid?orderId=%s", orderId);
     }
     restTemplate.postForObject(url, null, String.class);
+    log.info("Order fulfilled for order Id {} \n", orderId);
     return vendor;
   }
 
@@ -93,7 +113,7 @@ public class DummyAPICall {
    * @param vendor  the vendor
    */
   private void rescheduledCall(String orderId, String vendor) {
-    log.info("Rescheduled order {}", orderId);
+    log.info("Rescheduled orderId {} \n", orderId);
 
     RestTemplate restTemplate = new RestTemplate();
     String url = String.format("http://localhost:8080/recharge/poc/fulfilment/fulfill?orderId=%s",
@@ -106,4 +126,27 @@ public class DummyAPICall {
     }
     restTemplate.postForObject(url, null, String.class);
   }
+
+  /**
+   * Update circuit open.
+   *
+   * @param selectedVendor the selected vendor
+   */
+  private void updateCircuitOpen(final String selectedVendor) {
+    switch (selectedVendor) {
+      case "SS": {
+        FulfilmentService.SS_CIRCUIT_OPEN++;
+        break;
+      }
+      case "JRI": {
+        FulfilmentService.JRI_CIRCUIT_OPEN++;
+        break;
+      }
+      case "PAY1": {
+        FulfilmentService.PAY1_CIRCUIT_OPEN++;
+        break;
+      }
+    }
+  }
+
 }

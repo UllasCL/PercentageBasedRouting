@@ -60,7 +60,18 @@ public class FulfilmentService {
    * The constant JRI.
    */
   private static int JRI = 0;
-
+  /**
+   * The constant SS.
+   */
+  public static int SS_CIRCUIT_OPEN = 0;
+  /**
+   * The constant PAY1.
+   */
+  public static int PAY1_CIRCUIT_OPEN = 0;
+  /**
+   * The constant JRI.
+   */
+  public static int JRI_CIRCUIT_OPEN = 0;
   /**
    * The constant SS.
    */
@@ -121,7 +132,7 @@ public class FulfilmentService {
       updateFallbackVendors(selectedVendor);
     }
     orderVendor.put(orderId, selectedVendor);
-    log.info("Selected vendor {} for orderId {}\n", selectedVendor, orderId);
+    log.info("Selected vendor {} for orderId {}", selectedVendor, orderId);
     updateVendors(selectedVendor);
     if (totalRequest % 100 == 0) {
       print();
@@ -184,7 +195,7 @@ public class FulfilmentService {
     log.info("Total requests {} ", totalRequest);
     log.info("Total requests without fallback {} ", totalRequest - totalFallbackRequest);
     log.info("Total fallback requests {} ", totalFallbackRequest);
-    log.info("Total same vendor fallback {} ", totalFallbackOnSameVendor);
+    //log.info("Total same vendor fallback {} ", totalFallbackOnSameVendor);
 
     log.info(Constants.SS + " served {} fallback requests.", FALLBACK_SS);
     log.info(Constants.PAY1 + " served {} fallback requests.", FALLBACK_PAY1);
@@ -193,6 +204,11 @@ public class FulfilmentService {
     log.info(Constants.SS + "fallback % {} ", (FALLBACK_SS * 100 / (float) totalRequest));
     log.info(Constants.PAY1 + "fallback % {} ", (FALLBACK_PAY1 * 100 / (float) totalRequest));
     log.info(Constants.JRI + "fallback % {} ", (FALLBACK_JRI * 100 / (float) totalRequest));
+
+    log.info("Total requests when SS circuit is open {} ", SS_CIRCUIT_OPEN);
+    log.info("Total requests when PAY1 circuit is open {} ", PAY1_CIRCUIT_OPEN);
+    log.info("Total requests when JRI circuit is open {} ", JRI_CIRCUIT_OPEN);
+
   }
 
   /**
