@@ -1,6 +1,7 @@
 package com.poc.RechargePoc.controllers;
 
 import com.poc.RechargePoc.service.FulfilmentService;
+import com.poc.RechargePoc.service.FulfilmentServiceV2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -25,6 +26,12 @@ public class FulfillmentController {
   private FulfilmentService fulfilmentService;
 
   /**
+   * The Fulfilment service v 2.
+   */
+  @Autowired
+  private FulfilmentServiceV2 fulfilmentServiceV2;
+
+  /**
    * Gets app version.
    *
    * @param orderId  the order id
@@ -36,7 +43,7 @@ public class FulfillmentController {
       @RequestParam final String orderId,
       @RequestParam final String operator) {
     return new ResponseEntity<>(String.format("Selected vendor %s for order id: %s",
-        fulfilmentService.fulfilOrder(orderId, operator), orderId), HttpStatus.OK);
+        fulfilmentServiceV2.fulfilOrder(orderId, operator), orderId), HttpStatus.OK);
   }
 
   /**

@@ -23,7 +23,6 @@ public class VendorSelectionComponent {
   List<String> serverList = new ArrayList<>();
   private static Integer position = 0;
 
-
   /**
    * Gets vendor.
    *

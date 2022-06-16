@@ -7,13 +7,18 @@ public interface IVendorHandler {
   /**
    * Find vendor string.
    *
-   * @param responseBody the response body
+   * @param orderId the order id
    * @return the string
    */
-  String findVendor(final String responseBody);
+  String findVendor(final String orderId);
 
   /**
    * Register.
    */
   void register();
+
+  /**
+   * Print.
+   */
+  void print();
 }

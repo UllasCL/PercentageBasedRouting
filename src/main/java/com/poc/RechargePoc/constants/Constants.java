@@ -17,6 +17,18 @@ public class Constants {
    */
   public static String JRI = "JRI";
   /**
+   * The constant AIRTEL.
+   */
+  public static String AIRTEL = "AIRTEL";
+  /**
+   * The constant JIO.
+   */
+  public static String JIO = "JIO";
+  /**
+   * The constant VI.
+   */
+  public static String VI = "VI";
+  /**
    * The constant ZERO.
    */
   public static Integer ZERO = 0;
