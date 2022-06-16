@@ -208,7 +208,7 @@ public class FulfilmentService {
     log.info("Total requests {} ", totalRequest);
     log.info("Total requests without fallback {} ", totalRequest - totalFallbackRequest);
     log.info("Total fallback requests {} \n", totalFallbackRequest);
-    //log.info("Total same vendor fallback {} ", totalFallbackOnSameVendor);
+    log.info("Total same vendor fallback {} ", totalFallbackOnSameVendor);
 
     log.info("\n----------------------------------------------------------Fallback data"
         + "-------------------------------------------------------------------\n");

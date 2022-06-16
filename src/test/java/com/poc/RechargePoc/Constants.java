@@ -7,5 +7,5 @@ public class Constants {
   /**
    * The constant numberOfRequests.
    */
-  public static Integer numberOfRequests = 100;
+  public static Integer numberOfRequests = 1000;
 }
