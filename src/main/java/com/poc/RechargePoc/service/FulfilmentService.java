@@ -45,6 +45,11 @@ public class FulfilmentService {
   public static Map<String, String> orderVendor = new ConcurrentHashMap<>();
 
   /**
+   * The constant orderFallback.
+   */
+  public static Map<String, Integer> orderFallback = new ConcurrentHashMap<>();
+
+  /**
    * The constant totalRequest.
    */
   private static int totalRequest = 0;
@@ -94,13 +99,23 @@ public class FulfilmentService {
   private static int totalFallbackOnSameVendor = 0;
 
   /**
+   * The constant totalDoubleFallback.
+   */
+  private static int totalDoubleFallbackRequests = 0;
+
+  /**
    * Fulfil order string.
    *
    * @param orderId the order id
    * @return the string
    */
   public String fulfilOrder(String orderId) {
-    var result = fulfilmentRegistry.get(getVendor(orderId)).processCallback(orderId);
+    var vendor = getVendor(orderId);
+    if (vendor.isEmpty()) {
+      log.error("Double fallback happened for order id {}", orderId);
+      return "double fallback";
+    }
+    var result = fulfilmentRegistry.get(vendor).processCallback(orderId);
     if (result.isEmpty()) {
       log.error("Fulfilment Failed");
     }
@@ -116,20 +131,24 @@ public class FulfilmentService {
   private String getVendor(String orderId) {
     totalRequest++;
     var selectedVendor = vendorSelectionComponent.getVendor(vendorsMap);
-    if (selectedVendor == null) {
-      log.error("Invalid vendor selected");
-      return Strings.EMPTY;
-    }
     if (orderVendor.containsKey(orderId)) {
       log.info("First vendor was {} for orderId {}", orderVendor.get(orderId), orderId);
       while (selectedVendor.equals(orderVendor.get(orderId))) {
         selectedVendor = vendorSelectionComponent.getVendor(vendorsMap);
         totalFallbackOnSameVendor++;
+        orderFallback.put(orderId, orderFallback.get(orderId) + Constants.ONE);
+        if (orderFallback.get(orderId) > Constants.FALLBACK_COUNT) {
+          log.error("Invalid vendor selected");
+          totalDoubleFallbackRequests++;
+          return Strings.EMPTY;
+        }
       }
       orderVendor.put(orderId, selectedVendor);
       // log.info("Fallback vendor {} for orderId {}", selectedVendor, orderId);
       totalFallbackRequest++;
       updateFallbackVendors(selectedVendor);
+    } else {
+      orderFallback.put(orderId, Constants.ZERO);
     }
     orderVendor.put(orderId, selectedVendor);
     log.info("Selected vendor {} for orderId {}", selectedVendor, orderId);
@@ -195,7 +214,7 @@ public class FulfilmentService {
     log.info("\n----------------------------------------------------------Requested % distribution"
         + "-------------------------------------------------------------------\n");
 
-    vendorsMap.forEach((key,value) -> log.info("{} {}",key,value));
+    vendorsMap.forEach((key, value) -> log.info("{} {}", key, value));
 
     log.info("\n----------------------------------------------------------Actual % distribution"
         + "-------------------------------------------------------------------\n");
@@ -209,6 +228,7 @@ public class FulfilmentService {
     log.info("Total requests without fallback {} ", totalRequest - totalFallbackRequest);
     log.info("Total fallback requests {} \n", totalFallbackRequest);
     log.info("Total same vendor fallback {} ", totalFallbackOnSameVendor);
+    log.info("Total double fallback requests {} ", totalDoubleFallbackRequests);
 
     log.info("\n----------------------------------------------------------Fallback data"
         + "-------------------------------------------------------------------\n");
@@ -228,6 +248,11 @@ public class FulfilmentService {
     log.info("Total requests when PAY1 circuit is open {} ", PAY1_CIRCUIT_OPEN);
     log.info("Total requests when JRI circuit is open {} \n", JRI_CIRCUIT_OPEN);
 
+//    orderFallback.forEach((key, value) -> {
+//      if (value > 2) {
+//        log.info("{} {}", key, value);
+//      }
+//    });
   }
 
   /**

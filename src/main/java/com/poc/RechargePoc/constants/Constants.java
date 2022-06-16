@@ -16,7 +16,18 @@ public class Constants {
    * The constant JRI.
    */
   public static String JRI = "JRI";
-
+  /**
+   * The constant ZERO.
+   */
+  public static Integer ZERO = 0;
+  /**
+   * The constant ONE.
+   */
+  public static Integer ONE = 1;
+  /**
+   * The constant FALLBACK_COUNT.
+   */
+  public static Integer FALLBACK_COUNT = 2;
   /**
    * The constant SS.
    */
@@ -29,9 +40,8 @@ public class Constants {
    * The constant JRI.
    */
   public static Integer JRI_PER = 25;
-
   /**
    * The constant FAILURE_RATE.
    */
-  public static Integer FAILURE_RATE = 25;
+  public static Integer FAILURE_RATE = 10;
 }

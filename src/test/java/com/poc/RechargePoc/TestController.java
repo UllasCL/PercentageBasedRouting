@@ -12,8 +12,8 @@ public class TestController {
    * @param args the input arguments
    */
   public static void main(String[] args) {
-    //    callAPIs();
-    print();
+//    callAPIs();
+        print();
   }
 
   /**
@@ -22,11 +22,11 @@ public class TestController {
   private static void callAPIs() {
     for (int i = 0; i < Constants.numberOfRequests; i++) {
       callApi(i);
-      try {
-        Thread.sleep(500);
-      } catch (InterruptedException e) {
-        System.out.println(e.getMessage());
-      }
+//      try {
+//        Thread.sleep(500);
+//      } catch (InterruptedException e) {
+//        System.out.println(e.getMessage());
+//      }
     }
   }
 
