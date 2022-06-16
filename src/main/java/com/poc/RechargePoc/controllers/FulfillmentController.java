@@ -27,13 +27,16 @@ public class FulfillmentController {
   /**
    * Gets app version.
    *
-   * @param orderId the order id
+   * @param orderId  the order id
+   * @param operator the operator
    * @return the app version
    */
   @PostMapping(path = {"/fulfill"}, produces = {MediaType.TEXT_PLAIN_VALUE})
-  public ResponseEntity<String> fullFilOrder(@RequestParam final String orderId) {
+  public ResponseEntity<String> fullFilOrder(
+      @RequestParam final String orderId,
+      @RequestParam final String operator) {
     return new ResponseEntity<>(String.format("Selected vendor %s for order id: %s",
-        fulfilmentService.fulfilOrder(orderId), orderId), HttpStatus.OK);
+        fulfilmentService.fulfilOrder(orderId, operator), orderId), HttpStatus.OK);
   }
 
   /**

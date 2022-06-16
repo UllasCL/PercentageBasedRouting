@@ -106,16 +106,17 @@ public class FulfilmentService {
   /**
    * Fulfil order string.
    *
-   * @param orderId the order id
+   * @param orderId  the order id
+   * @param operator the operator
    * @return the string
    */
-  public String fulfilOrder(String orderId) {
-    var vendor = getVendor(orderId);
+  public String fulfilOrder(final String orderId, final String operator) {
+    var vendor = getVendor(orderId, operator);
     if (vendor.isEmpty()) {
       log.error("Double fallback happened for order id {}", orderId);
       return "double fallback";
     }
-    var result = fulfilmentRegistry.get(vendor).processCallback(orderId);
+    var result = fulfilmentRegistry.get(vendor).processFulfillment(orderId);
     if (result.isEmpty()) {
       log.error("Fulfilment Failed");
     }
@@ -128,7 +129,7 @@ public class FulfilmentService {
    * @param orderId the order id
    * @return the vendor
    */
-  private String getVendor(String orderId) {
+  private String getVendor(String orderId, final String operator) {
     totalRequest++;
     var selectedVendor = vendorSelectionComponent.getVendor(vendorsMap);
     if (orderVendor.containsKey(orderId)) {
@@ -248,11 +249,11 @@ public class FulfilmentService {
     log.info("Total requests when PAY1 circuit is open {} ", PAY1_CIRCUIT_OPEN);
     log.info("Total requests when JRI circuit is open {} \n", JRI_CIRCUIT_OPEN);
 
-//    orderFallback.forEach((key, value) -> {
-//      if (value > 2) {
-//        log.info("{} {}", key, value);
-//      }
-//    });
+    //    orderFallback.forEach((key, value) -> {
+    //      if (value > 2) {
+    //        log.info("{} {}", key, value);
+    //      }
+    //    });
   }
 
   /**

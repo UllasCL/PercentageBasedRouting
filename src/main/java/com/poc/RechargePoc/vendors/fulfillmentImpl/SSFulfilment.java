@@ -1,4 +1,4 @@
-package com.poc.RechargePoc.vendors.impl;
+package com.poc.RechargePoc.vendors.fulfillmentImpl;
 
 import com.poc.RechargePoc.constants.Constants;
 import com.poc.RechargePoc.vendors.FulfilmentRegistry;
@@ -11,18 +11,17 @@ import org.apache.logging.log4j.util.Strings;
 import org.springframework.stereotype.Component;
 
 /**
- * The type Jri fulfilment.
+ * The type Ss fulfilment.
  */
 @Slf4j
 @Component
 @AllArgsConstructor
-public class JRIFulfilment implements IFulfilmentHandler {
+public class SSFulfilment implements IFulfilmentHandler {
 
   /**
    * The Fulfilment registry.
    */
   private final FulfilmentRegistry fulfilmentRegistry;
-
   /**
    * The Dummy api call.
    */
@@ -35,11 +34,11 @@ public class JRIFulfilment implements IFulfilmentHandler {
    * @return the string
    */
   @Override
-  public String processCallback(final String orderId) {
+  public String processFulfillment(final String orderId) {
     try {
-      return dummyAPICall.dummyJRICall(orderId, Constants.JRI);
+      return dummyAPICall.dummySSCall(orderId, Constants.SS);
     } catch (Exception e) {
-      log.error("JRI fulfilment failed for order id {}",orderId);
+      log.error("SS fulfilment failed for order id {}",orderId);
     }
     return Strings.EMPTY;
   }
@@ -50,6 +49,6 @@ public class JRIFulfilment implements IFulfilmentHandler {
   @PostConstruct
   @Override
   public void register() {
-    fulfilmentRegistry.register(Constants.JRI, this);
+    fulfilmentRegistry.register(Constants.SS, this);
   }
 }
