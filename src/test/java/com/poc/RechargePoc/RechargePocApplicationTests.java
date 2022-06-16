@@ -29,11 +29,10 @@ public class RechargePocApplicationTests {
 	 *
 	 * @param repetitionInfo the repetition info
 	 */
-	@RepeatedTest(10)
+	@RepeatedTest(1)
   public void test(RepetitionInfo repetitionInfo) {
-    int orderId = 1 + 1;
     webTestClient.get()
-        .uri("http://localhost:8080/recharge/poc/fulfilment/fulfill?orderId={orderId}", orderId)
+        .uri("http://localhost:8080/recharge/poc/fulfilment/print")
         .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
         .exchange()
         .expectStatus()

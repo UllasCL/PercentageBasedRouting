@@ -12,25 +12,21 @@ public class TestController {
    * @param args the input arguments
    */
   public static void main(String[] args) {
-    call100APIs();
-    callModule5Apis();
-  }
-
-  /**
-   * Call module 5 apis.
-   */
-  private static void callModule5Apis() {
-    for (int i = 0; i < 100; i = i + 5) {
-      callApi(i);
-    }
+    //    callAPIs();
+    print();
   }
 
   /**
    * Call 100 ap is.
    */
-  private static void call100APIs() {
-    for (int i = 0; i < 100; i++) {
+  private static void callAPIs() {
+    for (int i = 0; i < Constants.numberOfRequests; i++) {
       callApi(i);
+      try {
+        Thread.sleep(500);
+      } catch (InterruptedException e) {
+        System.out.println(e.getMessage());
+      }
     }
   }
 
@@ -46,6 +42,19 @@ public class TestController {
         orderId);
 
     String answer = restTemplate.postForObject(url, null, String.class);
+    System.out.println(answer);
+  }
+
+
+  /**
+   * Print.
+   */
+  private static void print() {
+    RestTemplate restTemplate = new RestTemplate();
+
+    String url = "http://localhost:8080/recharge/poc/fulfilment/print";
+
+    String answer = restTemplate.getForObject(url, String.class);
     System.out.println(answer);
   }
 }

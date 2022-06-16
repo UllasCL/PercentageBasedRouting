@@ -37,11 +37,10 @@ public class PAY1Fulfilment implements IFulfilmentHandler {
    */
   @Override
   public String processCallback(final String orderId) {
-    log.info("Pay1 fulfilment initiated");
     try {
-     return dummyAPICall.dummyPAY1Call(orderId);
+     return dummyAPICall.dummyPAY1Call(orderId, Constants.PAY1);
     } catch (Exception e) {
-      log.error("PAY1 fulfilment failed");
+      log.error("PAY1 fulfilment failed for order id {}",orderId);
     }
     return Strings.EMPTY;
   }

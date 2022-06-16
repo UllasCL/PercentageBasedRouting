@@ -29,4 +29,9 @@ public class Constants {
    * The constant JRI.
    */
   public static Integer JRI_PER = 25;
+
+  /**
+   * The constant FAILURE_RATE.
+   */
+  public static Integer FAILURE_RATE = 25;
 }

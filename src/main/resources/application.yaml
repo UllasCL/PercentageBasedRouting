@@ -24,24 +24,35 @@ resilience4j:
     instances:
       jri:
         registerHealthIndicator: true
-        eventConsumerBufferSize: 10 #TODO Explore this
-        failureRateThreshold: 40 #TODO Product will confirm
-        minimumNumberOfCalls: 5
-        automaticTransitionFromOpenToHalfOpenEnabled: true
-        waitDurationInOpenState: 100s
+        eventConsumerBufferSize: 10
+        failureRateThreshold: 30 #TODO Product will confirm
+        minimumNumberOfCalls: 50
+        automaticTransitionFromOpenToHalfOpenEnabled: false
+        waitDurationInOpenState: 60s
         permittedNumberOfCallsInHalfOpenState: 3
-        slidingWindowSize: 10 #TODO Explore this
-        slidingWindowType: COUNT_BASED #TODO Explore this
+        slidingWindowSize: 50
+        slidingWindowType: COUNT_BASED
+      ss:
+        registerHealthIndicator: true
+        eventConsumerBufferSize: 10
+        failureRateThreshold: 30
+        minimumNumberOfCalls: 50
+        automaticTransitionFromOpenToHalfOpenEnabled: false
+        waitDurationInOpenState: 60s
+        permittedNumberOfCallsInHalfOpenState: 3
+        slidingWindowSize: 50
+        slidingWindowType: COUNT_BASED
+      payOne:
+        registerHealthIndicator: true
+        eventConsumerBufferSize: 10
+        failureRateThreshold: 30
+        minimumNumberOfCalls: 50
+        automaticTransitionFromOpenToHalfOpenEnabled: false
+        waitDurationInOpenState: 60s
+        permittedNumberOfCallsInHalfOpenState: 3
+        slidingWindowSize: 50
+        slidingWindowType: COUNT_BASED
 
 
-#  retry:
-#    instances:
-#      ss:
-#        maxRetryAttempts: 5
-#        waitDuration: 10s
-#      jri:
-#        maxRetryAttempts: 5
-#        waitDuration: 10s
-#      payOne:
-#        maxRetryAttempts: 5
-#        waitDuration: 10s
+fallback:
+  isRequired: true

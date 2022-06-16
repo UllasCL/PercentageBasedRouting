@@ -60,7 +60,18 @@ public class FulfilmentService {
    * The constant JRI.
    */
   private static int JRI = 0;
-
+  /**
+   * The constant SS.
+   */
+  public static int SS_CIRCUIT_OPEN = 0;
+  /**
+   * The constant PAY1.
+   */
+  public static int PAY1_CIRCUIT_OPEN = 0;
+  /**
+   * The constant JRI.
+   */
+  public static int JRI_CIRCUIT_OPEN = 0;
   /**
    * The constant SS.
    */
@@ -110,18 +121,18 @@ public class FulfilmentService {
       return Strings.EMPTY;
     }
     if (orderVendor.containsKey(orderId)) {
-      log.info("First vendor {} for orderId {}", orderVendor.get(orderId), orderId);
+      log.info("First vendor was {} for orderId {}", orderVendor.get(orderId), orderId);
       while (selectedVendor.equals(orderVendor.get(orderId))) {
         selectedVendor = vendorSelectionComponent.getVendor(vendorsMap);
         totalFallbackOnSameVendor++;
       }
       orderVendor.put(orderId, selectedVendor);
-      log.info("Fallback vendor {} for orderId {}", selectedVendor, orderId);
+      // log.info("Fallback vendor {} for orderId {}", selectedVendor, orderId);
       totalFallbackRequest++;
       updateFallbackVendors(selectedVendor);
     }
     orderVendor.put(orderId, selectedVendor);
-    log.info("Selected vendor {} for orderId {}\n", selectedVendor, orderId);
+    log.info("Selected vendor {} for orderId {}", selectedVendor, orderId);
     updateVendors(selectedVendor);
     if (totalRequest % 100 == 0) {
       print();
@@ -176,23 +187,47 @@ public class FulfilmentService {
   /**
    * Print.
    */
-  private void print() {
+  public void print() {
+
+    log.info("\n-------------------------------------------------------------------Result"
+        + "-------------------------------------------------------------------\n");
+
+    log.info("\n----------------------------------------------------------Requested % distribution"
+        + "-------------------------------------------------------------------\n");
+
+    vendorsMap.forEach((key,value) -> log.info("{} {}",key,value));
+
+    log.info("\n----------------------------------------------------------Actual % distribution"
+        + "-------------------------------------------------------------------\n");
     log.info(Constants.SS + "% {} ", (SS * 100 / (float) totalRequest));
     log.info(Constants.PAY1 + "% {} ", (PAY1 * 100 / (float) totalRequest));
-    log.info(Constants.JRI + "% {} ", (JRI * 100 / (float) totalRequest));
+    log.info(Constants.JRI + "% {} \n", (JRI * 100 / (float) totalRequest));
 
+    log.info("\n----------------------------------------------------------Requested data"
+        + "-------------------------------------------------------------------\n");
     log.info("Total requests {} ", totalRequest);
     log.info("Total requests without fallback {} ", totalRequest - totalFallbackRequest);
-    log.info("Total fallback requests {} ", totalFallbackRequest);
+    log.info("Total fallback requests {} \n", totalFallbackRequest);
     log.info("Total same vendor fallback {} ", totalFallbackOnSameVendor);
 
+    log.info("\n----------------------------------------------------------Fallback data"
+        + "-------------------------------------------------------------------\n");
     log.info(Constants.SS + " served {} fallback requests.", FALLBACK_SS);
     log.info(Constants.PAY1 + " served {} fallback requests.", FALLBACK_PAY1);
-    log.info(Constants.JRI + " served {} fallback requests.", FALLBACK_JRI);
+    log.info(Constants.JRI + " served {} fallback requests.\n", FALLBACK_JRI);
 
+    log.info("\n----------------------------------------------------------Fallback % distribution"
+        + "-------------------------------------------------------------------\n");
     log.info(Constants.SS + "fallback % {} ", (FALLBACK_SS * 100 / (float) totalRequest));
     log.info(Constants.PAY1 + "fallback % {} ", (FALLBACK_PAY1 * 100 / (float) totalRequest));
-    log.info(Constants.JRI + "fallback % {} ", (FALLBACK_JRI * 100 / (float) totalRequest));
+    log.info(Constants.JRI + "fallback % {} \n", (FALLBACK_JRI * 100 / (float) totalRequest));
+
+    log.info("\n\n----------------------------------------------------------Circuit break data"
+        + "-------------------------------------------------------------------\n");
+    log.info("Total requests when SS circuit is open {} ", SS_CIRCUIT_OPEN);
+    log.info("Total requests when PAY1 circuit is open {} ", PAY1_CIRCUIT_OPEN);
+    log.info("Total requests when JRI circuit is open {} \n", JRI_CIRCUIT_OPEN);
+
   }
 
   /**
@@ -200,13 +235,24 @@ public class FulfilmentService {
    *
    * @param orderId the order id
    * @return the string
-   * @throws Exception the exception
    */
-  public String randomSuccess(String orderId) throws Exception {
-    if (Integer.parseInt(orderId) % 5 != 0) {
-      return "success";
-    } else {
-      throw new Exception("invalid case");
-    }
+  public String randomSuccess(String orderId) {
+    return "success";
+  }
+
+  /**
+   * Clear stored data.
+   */
+  private void clearStoredData() {
+    FALLBACK_PAY1 = 0;
+    FALLBACK_JRI = 0;
+    FALLBACK_SS = 0;
+    SS = 0;
+    PAY1 = 0;
+    JRI = 0;
+    totalRequest = 0;
+    totalFallbackRequest = 0;
+    totalFallbackOnSameVendor = 0;
+    log.info("stored data cleared");
   }
 }
