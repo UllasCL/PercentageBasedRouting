@@ -51,4 +51,13 @@ public class FulfilmentServiceV2 {
   public void print(final String operator) {
     vendorRegistry.get(operator).print();
   }
+
+  /**
+   * Clear.
+   *
+   * @param operator the operator
+   */
+  public void clear(final String operator) {
+    vendorRegistry.get(operator).clear();
+  }
 }

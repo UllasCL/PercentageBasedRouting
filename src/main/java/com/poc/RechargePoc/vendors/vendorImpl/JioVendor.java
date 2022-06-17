@@ -280,4 +280,23 @@ public class JioVendor implements IVendorHandler {
       return target;
     }
   }
+
+  /**
+   * Clear stored data.
+   */
+  @Override
+  public void clear() {
+    FALLBACK_PAY1 = 0;
+    FALLBACK_JRI = 0;
+    FALLBACK_SS = 0;
+    SS = 0;
+    PAY1 = 0;
+    JRI = 0;
+    totalRequest = 0;
+    totalFallbackRequest = 0;
+    totalFallbackOnSameVendor = 0;
+    orderVendor.clear();
+    orderFallback.clear();
+    log.info("Jio stored data cleared");
+  }
 }

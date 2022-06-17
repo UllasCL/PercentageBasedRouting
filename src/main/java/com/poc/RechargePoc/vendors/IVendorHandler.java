@@ -21,4 +21,10 @@ public interface IVendorHandler {
    * Print.
    */
   void print();
+
+  /**
+   * Clear.
+   */
+  void clear();
+
 }

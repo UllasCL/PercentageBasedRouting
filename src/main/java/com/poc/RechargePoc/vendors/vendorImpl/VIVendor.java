@@ -3,7 +3,6 @@ package com.poc.RechargePoc.vendors.vendorImpl;
 import com.poc.RechargePoc.constants.Constants;
 import com.poc.RechargePoc.vendors.IVendorHandler;
 import com.poc.RechargePoc.vendors.VendorRegistry;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -27,27 +26,29 @@ import org.springframework.stereotype.Component;
 public class VIVendor implements IVendorHandler {
 
   /**
-   * The Vendor registry.
-   */
-  private final VendorRegistry vendorRegistry;
-
-  /**
-   * The Server list.
-   */
-  List<String> serverList;
-  /**
-   * The constant position.
-   */
-  private static Integer position = 0;
-  /**
    * The constant orderVendor.
    */
   public static Map<String, String> orderVendor = new ConcurrentHashMap<>();
-
   /**
    * The constant orderFallback.
    */
   public static Map<String, Integer> orderFallback = new ConcurrentHashMap<>();
+  /**
+   * The constant SS.
+   */
+  public static int SS_CIRCUIT_OPEN = 0;
+  /**
+   * The constant PAY1.
+   */
+  public static int PAY1_CIRCUIT_OPEN = 0;
+  /**
+   * The constant JRI.
+   */
+  public static int JRI_CIRCUIT_OPEN = 0;
+  /**
+   * The constant position.
+   */
+  private static Integer position = 0;
   /**
    * The constant totalRequest.
    */
@@ -64,18 +65,6 @@ public class VIVendor implements IVendorHandler {
    * The constant JRI.
    */
   private static int JRI = 0;
-  /**
-   * The constant SS.
-   */
-  public static int SS_CIRCUIT_OPEN = 0;
-  /**
-   * The constant PAY1.
-   */
-  public static int PAY1_CIRCUIT_OPEN = 0;
-  /**
-   * The constant JRI.
-   */
-  public static int JRI_CIRCUIT_OPEN = 0;
   /**
    * The constant SS.
    */
@@ -96,11 +85,18 @@ public class VIVendor implements IVendorHandler {
    * The constant totalFallbackOnSaveVendor.
    */
   private static int totalFallbackOnSameVendor = 0;
-
   /**
    * The constant totalDoubleFallback.
    */
   private static int totalDoubleFallbackRequests = 0;
+  /**
+   * The Vendor registry.
+   */
+  private final VendorRegistry vendorRegistry;
+  /**
+   * The Server list.
+   */
+  List<String> serverList;
 
   /**
    * Find vendor string.
@@ -279,5 +275,24 @@ public class VIVendor implements IVendorHandler {
       position++;
       return target;
     }
+  }
+
+  /**
+   * Clear stored data.
+   */
+  @Override
+  public void clear() {
+    FALLBACK_PAY1 = 0;
+    FALLBACK_JRI = 0;
+    FALLBACK_SS = 0;
+    SS = 0;
+    PAY1 = 0;
+    JRI = 0;
+    totalRequest = 0;
+    totalFallbackRequest = 0;
+    totalFallbackOnSameVendor = 0;
+    orderVendor.clear();
+    orderFallback.clear();
+    log.info("VI stored data cleared");
   }
 }

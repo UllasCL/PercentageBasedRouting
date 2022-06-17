@@ -3,7 +3,6 @@ package com.poc.RechargePoc.vendors.vendorImpl;
 import com.poc.RechargePoc.constants.Constants;
 import com.poc.RechargePoc.vendors.IVendorHandler;
 import com.poc.RechargePoc.vendors.VendorRegistry;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -276,5 +275,24 @@ public class AirtelVendor implements IVendorHandler {
       position++;
       return target;
     }
+  }
+
+  /**
+   * Clear stored data.
+   */
+  @Override
+  public void clear() {
+    FALLBACK_PAY1 = 0;
+    FALLBACK_JRI = 0;
+    FALLBACK_SS = 0;
+    SS = 0;
+    PAY1 = 0;
+    JRI = 0;
+    totalRequest = 0;
+    totalFallbackRequest = 0;
+    totalFallbackOnSameVendor = 0;
+    orderVendor.clear();
+    orderFallback.clear();
+    log.info("Airtel stored data cleared");
   }
 }
