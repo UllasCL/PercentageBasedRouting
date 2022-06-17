@@ -1,5 +1,8 @@
 package com.poc.RechargePoc.constants;
 
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
 /**
  * The type Constants.
  */
@@ -36,6 +39,38 @@ public class Constants {
    * The constant ONE.
    */
   public static Integer ONE = 1;
+
+  /**
+   * The constant airtelVendorsMap.
+   */
+  public static Map<String, Integer> airtelVendorsMap = new ConcurrentHashMap<>();
+  /**
+   * The constant jioVendorsMap.
+   */
+  public static Map<String, Integer> jioVendorsMap = new ConcurrentHashMap<>();
+  /**
+   * The constant ViVendorsMap.
+   */
+  public static Map<String, Integer> viVendorsMap = new ConcurrentHashMap<>();
+
+  static {
+    airtelVendorsMap.put(Constants.SS, 35);
+    airtelVendorsMap.put(Constants.PAY1, 50);
+    airtelVendorsMap.put(Constants.JRI, 15);
+  }
+
+  static {
+    jioVendorsMap.put(Constants.SS, 25);
+    jioVendorsMap.put(Constants.PAY1, 25);
+    jioVendorsMap.put(Constants.JRI, 50);
+  }
+
+  static {
+    viVendorsMap.put(Constants.SS, 70);
+    viVendorsMap.put(Constants.PAY1, 20);
+    viVendorsMap.put(Constants.JRI, 10);
+  }
+
   /**
    * The constant FALLBACK_COUNT.
    */

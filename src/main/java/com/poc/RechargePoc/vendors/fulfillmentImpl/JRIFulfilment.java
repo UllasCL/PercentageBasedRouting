@@ -35,11 +35,11 @@ public class JRIFulfilment implements IFulfilmentHandler {
    * @return the string
    */
   @Override
-  public String processFulfillment(final String orderId) {
+  public String processFulfillment(final String orderId, final String operator) {
     try {
-      return dummyAPICall.dummyJRICall(orderId, Constants.JRI);
+      return dummyAPICall.dummyJRICall(orderId, Constants.JRI, operator);
     } catch (Exception e) {
-      log.error("JRI fulfilment failed for order id {}",orderId);
+      log.error("JRI fulfilment failed for order id {}", orderId);
     }
     return Strings.EMPTY;
   }

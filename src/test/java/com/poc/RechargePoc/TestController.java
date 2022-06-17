@@ -12,18 +12,18 @@ public class TestController {
    * @param args the input arguments
    */
   public static void main(String[] args) {
-
-    new Thread(() -> callAPIs("AIRTEL")).start();
-    new Thread(() -> callAPIs("JIO")).start();
-
-//    print();
+//    callOrderApis();
+        printResultForAllOperators();
   }
 
   /**
    * Call 100 ap is.
+   *
+   * @param operator        the operator
+   * @param numberOfApiCall the number of api call
    */
-  private static void callAPIs(final String operator) {
-    for (int i = 0; i < Constants.numberOfRequests; i++) {
+  private static void callAPIs(final String operator, final Integer numberOfApiCall) {
+    for (int i = 0; i < numberOfApiCall; i++) {
       callApi(i, operator);
       //      try {
       //        Thread.sleep(500);
@@ -49,16 +49,32 @@ public class TestController {
     System.out.println(answer);
   }
 
+  private static void callOrderApis(){
+    new Thread(() -> callAPIs("AIRTEL", Constants._10kRequests)).start();
+    new Thread(() -> callAPIs("JIO", Constants._10kRequests)).start();
+    new Thread(() ->  callAPIs("VI", Constants._10kRequests)).start();
+  }
+  /**
+   * Print result for all operators.
+   */
+  private static void printResultForAllOperators() {
+    print("AIRTEL");
+    print("JIO");
+    print("VI");
+  }
 
   /**
    * Print.
+   *
+   * @param operator the operator
    */
-  private static void print() {
+  private static void print(final String operator) {
     RestTemplate restTemplate = new RestTemplate();
 
-    String url = "http://localhost:8080/recharge/poc/fulfilment/print";
+    String url = String.format("http://localhost:8080/recharge/poc/fulfilment/print?operator=%s",
+        operator);
 
-    String answer = restTemplate.getForObject(url, String.class);
+    String answer = restTemplate.postForObject(url, null, String.class);
     System.out.println(answer);
   }
 }

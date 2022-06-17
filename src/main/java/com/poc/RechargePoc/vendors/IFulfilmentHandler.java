@@ -8,9 +8,11 @@ public interface IFulfilmentHandler {
   /**
    * Process callback.
    *
-   * @param responseBody the response body
+   * @param orderId  the order id
+   * @param operator the operator
+   * @return the string
    */
-  String processFulfillment(final String responseBody);
+  String processFulfillment(final String orderId, final String operator);
 
   /**
    * Register.

@@ -7,7 +7,6 @@ import com.poc.RechargePoc.vendors.dummyCall.DummyAPICall;
 import javax.annotation.PostConstruct;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.stereotype.Component;
 
@@ -36,11 +35,11 @@ public class PAY1Fulfilment implements IFulfilmentHandler {
    * @return the string
    */
   @Override
-  public String processFulfillment(final String orderId) {
+  public String processFulfillment(final String orderId, final String operator) {
     try {
-     return dummyAPICall.dummyPAY1Call(orderId, Constants.PAY1);
+      return dummyAPICall.dummyPAY1Call(orderId, Constants.PAY1, operator);
     } catch (Exception e) {
-      log.error("PAY1 fulfilment failed for order id {}",orderId);
+      log.error("PAY1 fulfilment failed for order id {}", orderId);
     }
     return Strings.EMPTY;
   }

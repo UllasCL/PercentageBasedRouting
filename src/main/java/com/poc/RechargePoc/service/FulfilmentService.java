@@ -116,7 +116,7 @@ public class FulfilmentService {
       log.error("Double fallback happened for order id {}", orderId);
       return "double fallback";
     }
-    var result = fulfilmentRegistry.get(vendor).processFulfillment(orderId);
+    var result = fulfilmentRegistry.get(vendor).processFulfillment(orderId, operator);
     if (result.isEmpty()) {
       log.error("Fulfilment Failed");
     }

@@ -1,6 +1,5 @@
 package com.poc.RechargePoc.vendors.vendorImpl;
 
-import com.poc.RechargePoc.component.VendorSelectionComponent;
 import com.poc.RechargePoc.constants.Constants;
 import com.poc.RechargePoc.vendors.IVendorHandler;
 import com.poc.RechargePoc.vendors.VendorRegistry;
@@ -28,38 +27,29 @@ import org.springframework.stereotype.Component;
 public class AirtelVendor implements IVendorHandler {
 
   /**
-   * The Vendor registry.
-   */
-  private final VendorRegistry vendorRegistry;
-
-  /**
-   * The constant vendorsMap.
-   */
-  public static Map<String, Integer> vendorsMap = new ConcurrentHashMap<>();
-
-  static {
-    vendorsMap.put(Constants.SS, Constants.SS_PER);
-    vendorsMap.put(Constants.PAY1, Constants.PAY1_PER);
-    vendorsMap.put(Constants.JRI, Constants.JRI_PER);
-  }
-
-  /**
-   * The Server list.
-   */
-  List<String> serverList = new ArrayList<>();
-  /**
-   * The constant position.
-   */
-  private static Integer position = 0;
-  /**
    * The constant orderVendor.
    */
   public static Map<String, String> orderVendor = new ConcurrentHashMap<>();
-
   /**
    * The constant orderFallback.
    */
   public static Map<String, Integer> orderFallback = new ConcurrentHashMap<>();
+  /**
+   * The constant SS.
+   */
+  public static int SS_CIRCUIT_OPEN = 0;
+  /**
+   * The constant PAY1.
+   */
+  public static int PAY1_CIRCUIT_OPEN = 0;
+  /**
+   * The constant JRI.
+   */
+  public static int JRI_CIRCUIT_OPEN = 0;
+  /**
+   * The constant position.
+   */
+  private static Integer position = 0;
   /**
    * The constant totalRequest.
    */
@@ -76,18 +66,6 @@ public class AirtelVendor implements IVendorHandler {
    * The constant JRI.
    */
   private static int JRI = 0;
-  /**
-   * The constant SS.
-   */
-  public static int SS_CIRCUIT_OPEN = 0;
-  /**
-   * The constant PAY1.
-   */
-  public static int PAY1_CIRCUIT_OPEN = 0;
-  /**
-   * The constant JRI.
-   */
-  public static int JRI_CIRCUIT_OPEN = 0;
   /**
    * The constant SS.
    */
@@ -108,11 +86,18 @@ public class AirtelVendor implements IVendorHandler {
    * The constant totalFallbackOnSaveVendor.
    */
   private static int totalFallbackOnSameVendor = 0;
-
   /**
    * The constant totalDoubleFallback.
    */
   private static int totalDoubleFallbackRequests = 0;
+  /**
+   * The Vendor registry.
+   */
+  private final VendorRegistry vendorRegistry;
+  /**
+   * The Server list.
+   */
+  List<String> serverList;
 
   /**
    * Find vendor string.
@@ -123,11 +108,11 @@ public class AirtelVendor implements IVendorHandler {
   @Override
   public String findVendor(final String orderId) {
     totalRequest++;
-    var selectedVendor = getVendor(vendorsMap);
+    var selectedVendor = getVendor(Constants.airtelVendorsMap);
     if (orderVendor.containsKey(orderId)) {
       log.info("First vendor was {} for orderId {}", orderVendor.get(orderId), orderId);
       while (selectedVendor.equals(orderVendor.get(orderId))) {
-        selectedVendor = getVendor(vendorsMap);
+        selectedVendor = getVendor(Constants.airtelVendorsMap);
         totalFallbackOnSameVendor++;
         orderFallback.put(orderId, orderFallback.get(orderId) + Constants.ONE);
         if (orderFallback.get(orderId) > Constants.FALLBACK_COUNT) {
@@ -214,7 +199,7 @@ public class AirtelVendor implements IVendorHandler {
     log.info("\n----------------------------------------------------------Requested % distribution"
         + "-------------------------------------------------------------------\n");
 
-    vendorsMap.forEach((key, value) -> log.info("{} {}", key, value));
+    Constants.airtelVendorsMap.forEach((key, value) -> log.info("{} {}", key, value));
 
     log.info("\n----------------------------------------------------------Actual % distribution"
         + "-------------------------------------------------------------------\n");

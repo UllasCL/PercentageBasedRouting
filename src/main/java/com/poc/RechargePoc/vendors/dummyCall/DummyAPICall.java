@@ -26,51 +26,55 @@ public class DummyAPICall {
   /**
    * Dummy ss call.
    *
-   * @param orderId the order id
-   * @param vendor  the vendor
+   * @param orderId  the order id
+   * @param vendor   the vendor
+   * @param operator the operator
    * @return the string
    */
   @CircuitBreaker(name = "ss", fallbackMethod = "fallback")
-  public String dummySSCall(String orderId, String vendor) {
+  public String dummySSCall(String orderId, String vendor, String operator) {
     return callRandomSuccess(orderId, Constants.SS);
   }
 
   /**
    * Dummy pay 1 call.
    *
-   * @param orderId the order id
-   * @param vendor  the vendor
+   * @param orderId  the order id
+   * @param vendor   the vendor
+   * @param operator the operator
    * @return the string
    */
   @CircuitBreaker(name = "payOne", fallbackMethod = "fallback")
-  public String dummyPAY1Call(String orderId, String vendor) {
+  public String dummyPAY1Call(String orderId, String vendor, String operator) {
     return callRandomSuccess(orderId, Constants.PAY1);
   }
 
   /**
    * Dummy jri call.
    *
-   * @param orderId the order id
-   * @param vendor  the vendor
+   * @param orderId  the order id
+   * @param vendor   the vendor
+   * @param operator the operator
    * @return the string
    */
   @CircuitBreaker(name = "jri", fallbackMethod = "fallback")
-  public String dummyJRICall(String orderId, String vendor) {
+  public String dummyJRICall(String orderId, String vendor, String operator) {
     return callRandomSuccess(orderId, Constants.JRI);
   }
 
   /**
    * Test.
    *
-   * @param orderId the order id
-   * @param vendor  the vendor
-   * @param e       the e
+   * @param orderId  the order id
+   * @param vendor   the vendor
+   * @param operator the operator
+   * @param e        the e
    * @return the string
    */
-  private String fallback(String orderId, String vendor, Exception e) {
+  private String fallback(String orderId, String vendor, String operator, Exception e) {
     log.info("Fallback orderId {} and old vendor is {}", orderId, vendor);
     // Reschedule fulfillment with simulated time gap.
-    rescheduledCall(orderId, vendor);
+    rescheduledCall(orderId, operator);
     return vendor;
   }
 
@@ -116,15 +120,15 @@ public class DummyAPICall {
   /**
    * Call api again string.
    *
-   * @param orderId the order id
-   * @param vendor  the vendor
+   * @param orderId  the order id
+   * @param operator the operator
    */
-  private void rescheduledCall(String orderId, String vendor) {
+  private void rescheduledCall(String orderId, String operator) {
     log.info("Rescheduled orderId {} \n", orderId);
 
     RestTemplate restTemplate = new RestTemplate();
-    String url = String.format("http://localhost:8080/recharge/poc/fulfilment/fulfill?orderId=%s",
-        orderId);
+    String url = String.format("http://localhost:8080/recharge/poc/fulfilment/fulfill?orderId=%s"
+        + "&operator=%s", orderId, operator);
 
     try {
       Thread.sleep(100);

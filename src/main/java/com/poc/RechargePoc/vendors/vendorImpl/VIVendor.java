@@ -32,20 +32,9 @@ public class VIVendor implements IVendorHandler {
   private final VendorRegistry vendorRegistry;
 
   /**
-   * The constant vendorsMap.
-   */
-  public static Map<String, Integer> vendorsMap = new ConcurrentHashMap<>();
-
-  static {
-    vendorsMap.put(Constants.SS, Constants.SS_PER);
-    vendorsMap.put(Constants.PAY1, Constants.PAY1_PER);
-    vendorsMap.put(Constants.JRI, Constants.JRI_PER);
-  }
-
-  /**
    * The Server list.
    */
-  List<String> serverList = new ArrayList<>();
+  List<String> serverList;
   /**
    * The constant position.
    */
@@ -122,11 +111,11 @@ public class VIVendor implements IVendorHandler {
   @Override
   public String findVendor(final String orderId) {
     totalRequest++;
-    var selectedVendor = getVendor(vendorsMap);
+    var selectedVendor = getVendor(Constants.viVendorsMap);
     if (orderVendor.containsKey(orderId)) {
       log.info("First vendor was {} for orderId {}", orderVendor.get(orderId), orderId);
       while (selectedVendor.equals(orderVendor.get(orderId))) {
-        selectedVendor = getVendor(vendorsMap);
+        selectedVendor = getVendor(Constants.viVendorsMap);
         totalFallbackOnSameVendor++;
         orderFallback.put(orderId, orderFallback.get(orderId) + Constants.ONE);
         if (orderFallback.get(orderId) > Constants.FALLBACK_COUNT) {
@@ -213,7 +202,7 @@ public class VIVendor implements IVendorHandler {
     log.info("\n----------------------------------------------------------Requested % distribution"
         + "-------------------------------------------------------------------\n");
 
-    vendorsMap.forEach((key, value) -> log.info("{} {}", key, value));
+    Constants.viVendorsMap.forEach((key, value) -> log.info("{} {}", key, value));
 
     log.info("\n----------------------------------------------------------Actual % distribution"
         + "-------------------------------------------------------------------\n");

@@ -55,4 +55,4 @@ resilience4j:
 
 
 fallback:
-  isRequired: false
+  isRequired: true

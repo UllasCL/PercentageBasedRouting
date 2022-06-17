@@ -34,11 +34,11 @@ public class SSFulfilment implements IFulfilmentHandler {
    * @return the string
    */
   @Override
-  public String processFulfillment(final String orderId) {
+  public String processFulfillment(final String orderId, final String operator) {
     try {
-      return dummyAPICall.dummySSCall(orderId, Constants.SS);
+      return dummyAPICall.dummySSCall(orderId, Constants.SS, operator);
     } catch (Exception e) {
-      log.error("SS fulfilment failed for order id {}",orderId);
+      log.error("SS fulfilment failed for order id {}", orderId);
     }
     return Strings.EMPTY;
   }

@@ -42,8 +42,9 @@ public class FulfillmentController {
   public ResponseEntity<String> fullFilOrder(
       @RequestParam final String orderId,
       @RequestParam final String operator) {
-    return new ResponseEntity<>(String.format("Selected vendor %s for order id: %s",
-        fulfilmentServiceV2.fulfilOrder(orderId, operator), orderId), HttpStatus.OK);
+    return new ResponseEntity<>(String.format("Selected vendor %s for order id: %s and operator: "
+        + "%s", fulfilmentServiceV2.fulfilOrder(orderId, operator), orderId, operator),
+        HttpStatus.OK);
   }
 
   /**
@@ -63,9 +64,9 @@ public class FulfillmentController {
    *
    * @return the response entity
    */
-  @GetMapping(path = {"/print"})
-  public ResponseEntity print() {
-    fulfilmentService.print();
+  @PostMapping(path = {"/print"})
+  public ResponseEntity print( @RequestParam final String operator) {
+    fulfilmentServiceV2.print(operator);
     return new ResponseEntity<>(HttpStatus.OK);
   }
 }
